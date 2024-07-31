@@ -1,5 +1,5 @@
   
-# Practice for Chapter 2
+# Practices for Chapter 2
 
 ## Practice 2-1
 
