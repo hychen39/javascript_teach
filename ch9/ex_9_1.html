@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        Open a new window with the URL "https://example.com" and resize it to 500 pixels wide and 500 pixels high. Also, set the window title to "Example Window" and position it to the center of the screen.
+        <script>
+            // show a new window with the URL "https://example.com" 
+            let exampleWin = window.open("https://example.com", "exampleWin", "resizable");
+            // Resize the pop-up window to 500 pixels wide and 500 pixels high and set the window title to "Example Window" and position it to the center of the screen.
+            exampleWin.resizeTo(500, 500);
+            // the window.screen object contains information about the user's screen
+            exampleWin.moveTo((screen.width - 500) / 2, (screen.height - 500) / 2);
+        </script>
+    </body>
+</html>

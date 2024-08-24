@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title> Show the favorite colors </title>
+    </head>
+    <body>
+        <!-- Checkbox group showing a list of colors -->
+        <fieldset>
+            <legend>Select one or more favorite colors</legend>
+            <input type="checkbox" name="color" value="Red"/> <label for="Red">Red</label><br>
+            <input type="checkbox" name="color" value="Yellow"/> <label for="Yellow">Yellow</label><br>
+            <input type="checkbox" name="color" value="Green"/> <label for="Green">Green</label><br>
+            <input type="checkbox" name="color" value="Blue"/> <label for="Blue">Blue</label><br>
+        </fieldset>
+        <button onclick="showColors()">Show the favorite colors</button>
+        <p>Your favorite colors:</p>
+        <p id="display" ></p>
+    </body>
+    <script>
+        function showColors(){
+            // Get all the checkboxes
+            let checkboxes = document.getElementsByName("color");  // NodeList<HtmlElement>
+            // Get the display element and clear it
+            const displayElement = document.getElementById("display");
+            displayElement.innerHTML = "";
+                // Iterate the checkboxes
+            checkboxes.forEach(checkbox => {
+                // If the checkbox is checked
+                console.log(checkbox);
+                if(checkbox.checked){
+                    // Display the value of the checkbox
+                    displayElement.innerHTML += checkbox.value + "<br>";
+                    // Apply the inline style to the checkbox
+                    const colorName = checkbox.value.toLowerCase();
+                    const labelElement = checkbox.nextElementSibling;
+                    labelElement.style.color = colorName;
+                } else {
+                    checkbox.nextElementSibling.style.color = "black";
+                }
+            });
+        }
+    </script> 
+</html>
