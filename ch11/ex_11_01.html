@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+</head>
+<body>
+    <p id="display"></p>
+    
+    <script>
+        function initPage(event){
+            let message = `Event type: ${event.type} 
+                <br/> target: ${event.target}, 
+                <br/> Time to trigger the event since loading the page: ${event.timeStamp}`;
+                
+            document.getElementById("display").innerHTML = message;
+            console.log(event);
+        }
+        window.onload = initPage;
+    </script>
+</body>
+</html>

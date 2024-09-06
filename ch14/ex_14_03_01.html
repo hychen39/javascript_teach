@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Example 10-3-1: Read file contents when the user selects a directory</title>
+</head>
+<body>
+
+<form>
+    <input id="filePicker" type="file" webkitdirectory>
+    <p>
+    <p> File name: </p>
+    <ol id="output-file"></ol>
+    <p> Data URLs of files: </p>
+    <ol id="output-dataUrl"></ol>
+    </p>
+</form>
+
+<script>
+    const filePicker = document.getElementById('filePicker');
+    const outputFile = document.getElementById('output-file');
+    const outputDataUrl = document.getElementById('output-dataUrl');
+
+    filePicker.onchange = async function (event) {
+        const files = event.target.files; // Array of File objects
+        console.log(files);
+        //
+        Array.from(files).forEach(file => {
+            const li = document.createElement('li');
+            li.textContent = file.webkitRelativePath;
+            outputFile.appendChild(li);
+        });
+        // Read the file contents from File objects
+        const allFileContents = await Promise.all([...files].map(getFileContent));
+        // Display the content of the files
+        allFileContents.forEach(content => {
+            const li = document.createElement('li');
+            li.textContent = content.substring(0, 100);
+            outputDataUrl.appendChild(li);
+        });
+
+    }
+
+    function getFileContent(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                resolve(event.target.result);
+            }
+            reader.onerror = function (event) {
+                reject(event.target.error);
+            }
+            reader.readAsDataURL(file);
+        });
+    }
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ex_14_01</title>
+</head>
+<body>
+
+<form>
+    <input id="filePicker" type="file" multiple>
+    <p id="output"></p>
+</form>
+
+<script>
+    const filePicker = document.getElementById('filePicker');
+    const output = document.getElementById('output');
+    filePicker.onchange = function(event){
+        // get the select files
+        const files = event.target.files;
+        // loop through the files
+        for(const file of files){
+            output.innerHTML += `<p>${file.name} - ${file.size} bytes</p>`;
+        }
+    }
+</script>
+
+</body>
+</html>

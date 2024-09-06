@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Example 10-3: Read a text file and show the content on the page</title>
+</head>
+<body>
+
+<form>
+    <input id="filePicker" type="file">
+    <p id="output"></p>
+</form>
+
+<script>
+    const filePicker = document.getElementById('filePicker');
+    const output = document.getElementById('output');
+
+    // Method 1
+    filePicker.onchange = function(event){
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function(){
+            output.innerHTML = reader.result;
+        }
+        reader.readAsText(file);
+    }
+    //Method 2: Create an async function to read the file object.
+    // function readFileTextContent(file){
+    //     return new Promise((resolve, reject) => {
+    //         const reader = new FileReader();
+    //         reader.onload = function(){
+    //             resolve(reader.result);
+    //         }
+    //         reader.readAsText(file);
+    //         reader.onerror = reject;
+    //     });
+    // }
+    // // Then, use the async function to read the file object.
+    // filePicker.onchange = async function(event){
+    //     console.log('Inside the async function');
+    //     const file = event.target.files[0];
+    //     try{
+    //         const content = await readFileTextContent(file);
+    //         output.innerHTML = content;
+    //     } catch(error){
+    //         output.innerHTML = error.message;
+    //     }
+    // }
+</script>
+
+</body>
+</html>

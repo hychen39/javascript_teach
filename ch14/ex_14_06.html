@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Example 10-6: Drag and drop files and directories and read their contents. </title>
+    <style>
+        .drop-zone {
+            border: 2px dashed #ccc;
+            border-radius: 20px;
+            width: 300px;
+            height: 200px;
+            text-align: center;
+            padding: 20px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+
+Drop Zone
+<p id="dropZone" class="drop-zone">Drop files here</p>
+
+<p>
+<ol id="output"></ol>
+</p>
+
+<script>
+    const dropZone = document.getElementById('dropZone');
+    const output = document.getElementById('output');
+
+    dropZone.ondragover = function(event){
+        event.preventDefault();
+        dropZone.style.backgroundColor = '#f0f0f0';
+    }
+
+    dropZone.ondragleave = function(event){
+        event.preventDefault();
+        dropZone.style.backgroundColor = '';
+    }
+
+    dropZone.ondrop = async function(event){
+        event.preventDefault();
+        dropZone.style.backgroundColor = '';
+        // console.log(event.dataTransfer.items[0].kind);
+        const fileSystemEntries = [...event.dataTransfer.items]
+            .filter(item => item.kind === 'file')
+            .map(item => item.webkitGetAsEntry());
+        // console.log(fileSystemEntries);
+        // call the recursive function to get the content of the directory
+        const allEntries = await getAllFiles(fileSystemEntries);
+        // Get the file object and read the content for each FileEntry
+        const allFileContents = await Promise.all(allEntries.map(getFileContent))
+
+        // Display the content of the files
+        allFileContents.forEach(content => {
+            const li = document.createElement('li');
+            li.textContent = content;
+            output.appendChild(li);
+        });
+
+        console.log(allEntries);
+    }
+
+    /**
+     * Get the text content of a file given a FileSystemFileEntry object.
+     *
+     * @param fileEntry
+     * @returns {Promise<string>}
+     */
+    function getFileContent(fileEntry){
+        return new Promise((resolve, reject) => {
+            // get the file object from the fileEntry object
+            fileEntry.file(function(file){
+                // Read the content when the file object is ready
+                const reader = new FileReader();
+                reader.onload = function(event){
+                    resolve(event.target.result);
+                }
+
+                if (isFileWithExtensions(fileEntry, ['.png', 'jpg', 'jpeg']))
+                    reader.readAsDataURL(file);
+                else
+                    reader.readAsText(file);
+            });
+        });
+
+    }
+
+    function isFileWithExtensions(entry, extensions) {
+        if (entry.isFile) {
+            const fileName = entry.name;
+            const regex = new RegExp(`(${extensions.join('|')})$`, 'i');
+            return regex.test(fileName);
+        }
+        return false;
+    }
+
+    /**
+     * Get all files in a directory and its subdirectories.
+     * @param fileSystemEntries - an array of FileSystemFileEntry or FileSystemDirectoryEntry objects
+     *
+     * @returns an array of FileSystemFileEntry objects
+     */
+   async function getAllFiles(fileSystemEntries){
+        const fileEntries = [];
+        const directories = [];
+        for(const entry of fileSystemEntries){
+            if(entry.isFile){
+                fileEntries.push(entry);
+            } else if(entry.isDirectory){
+                // get the content of the directory
+                const subEntries = await getDirContent(entry);
+                // recursively call the function to get the files in the directory
+                directories.push(entry.fullPath)
+                console.log('After push: ', directories);
+                const subFileEntries = await getAllFiles(subEntries);
+                fileEntries.push(...subFileEntries);
+                directories.pop();
+                console.log('After pop: ', directories);
+            }
+        }
+        return fileEntries;
+    }
+
+    /**
+     * Get the content of a file system entry
+     * @param fileSystemDirectoryEntry
+     */
+   function getDirContent(fileSystemDirectoryEntry){
+        const collectedEntries = [];
+        const dirReader = fileSystemDirectoryEntry.createReader();
+        return new Promise(async (resolve, reject) => {
+            let stop_flag = false;
+            while (!stop_flag) {
+                // continue to read until no more entries
+                // async while loop
+                let readEntries = await (() => {
+                    return new Promise((resolve, reject) => {
+                        dirReader.readEntries(function (entries) {
+                            resolve(entries);
+                        });
+                    });
+                })();
+                if (readEntries.length > 0)
+                    collectedEntries.push(...readEntries);
+                else
+                    stop_flag = true;
+            }
+            resolve(collectedEntries);
+        });
+    }
+</script>
+</body>
+</html>

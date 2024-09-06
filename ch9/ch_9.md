@@ -349,7 +349,7 @@ S3. The browser builds the following models by combining the HTML content and th
 S4. The browser renders the web page based on the Rendering Tree.
 
 
-![Broswer Object Model](img/img03_12.jpg)
+![Browser Object Model](img/img03_12.jpg)
 
 Refer to the following video to learn more: [The process to build the render tree (Youtube 3:04)](https://www.youtube.com/watch?v=lvb06W_VKVE)
 
