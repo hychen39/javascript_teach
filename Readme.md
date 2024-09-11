@@ -6,6 +6,8 @@ Chapter 2 JavaScript Essentials
 
 Chapter 3 Javascript Multiple Values: Arrays and Objects
 
+Chapter 6 Functions
+
 Chapter 7 Classes
 
 Chapter 9 The DOM Object Model
