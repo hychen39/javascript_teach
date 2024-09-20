@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Executing deferred script</title>
+</head>
+<body>
+
+<h1> Msg 1: Hello World! </h1>
+
+The `defer` and `async` attributes are only for the external scripts.
+
+<h2 id="output"></h2>
+
+<!--<script defer src="https://javascript.info/article/script-async-defer/long.js?speed=1"></script>-->
+<script defer src="ch_01_01.js"></script>
+
+<h1>Msg 2: The message appears before completing the long script because of the `defer` attribute.
+</h1>
+
+</body>
+</html>
