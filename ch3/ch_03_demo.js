@@ -80,3 +80,16 @@ console.log(fiat500_1)
 delete fiat500_1.fule;
 
 console.log(fiat500_1)
+
+// Demo shallow copy
+let fiat500_2 = new FIAT500('Fiat', '500', 1957, 'Yellow', 4, 1000);
+
+let originalFiats = [fiat500_1, fiat500_2];
+let newFiats = [...originalFiats];
+newFiats[0].color = 'Red';
+console.log(originalFiats[0]);  
+console.log(newFiats[0]);
+console.log(originalFiats[0] === newFiats[0]);  // true
+
+
+
