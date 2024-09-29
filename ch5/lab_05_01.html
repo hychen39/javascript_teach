@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 05_01 </title>
+</head>
+
+<body>
+    <div onclick="displayFeatures();">
+        <input type="checkbox" id="f1" name="feature" value="el_park_break">Electronic Parking Brake<br>
+        <input type="checkbox" id="f2" name="feature" value="auto_headlights">Automatic Headlights<br>
+        <input type="checkbox" id="f3" name="feature" value="lane_assist">Lane Assist<br>
+        <input type="checkbox" id="f4" name="feature" value="blind_spot_monitor">Blind Spot Monitor<br>
+    </div>
+</body>
+
+<script>
+    function displayFeatures() {
+        var features = document.querySelectorAll('input[name="feature"]:checked');
+        console.log('-------------------');
+        Array.from(features).forEach(function (feature) {
+            console.log(feature.value);
+        });
+    }
+</script>
+
+</html>
