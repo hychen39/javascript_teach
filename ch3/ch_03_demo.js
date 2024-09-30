@@ -1,8 +1,11 @@
 let emptyArray = new Array(5);
 console.log(emptyArray);  // [ <5 empty items> ]
 
-// copy other array 
+// Spread operator
+let fruits = ['apple', 'banana', 'cherry'];
+console.log(...fruits);  // apple banana cherry
 
+// copy other array 
 let basicColor = ['red', 'green', 'blue'];
 console.log(basicColor[4]);  
 
