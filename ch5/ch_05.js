@@ -20,5 +20,7 @@ const car = {
   console.log(values);
 
   for (const v in values) {
+    // v is the property key
+    console.log(v);
     console.log(values[v]);
   }
