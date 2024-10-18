@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IIFE - Calculate the BMI </title>
+</head>
+<body>
+<div>
+    <input type="text" id="weight" placeholder="Enter your weight in kg"> <br>
+    <input type="text" id="height" placeholder="Enter your height in cm"> <br>
+    <button id="calculate">Calculate BMI</button>
+</div>
+<script>
+    (function() {
+        const calculateBMI = (weight, height) => {
+            height = height || 1;
+            return weight / (height ** 2);
+        };
+        var calculate = document.getElementById('calculate');
+        calculate.addEventListener('click', function() {
+            var weight = document.getElementById('weight').value;
+            var height = document.getElementById('height').value / 100;
+            var bmi = calculateBMI(weight, height);
+            alert('Your BMI is ' + bmi.toFixed(2));
+        });
+    })();
+</script>
+</body>
+</html>

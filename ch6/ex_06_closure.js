@@ -9,7 +9,10 @@
 const a = 10;
 
 function f(b){
-    // return a function object that has access to the variables or parameters of the outer function,
+    // return a function object that has access 
+    // to the variables or parameters of the outer function,
+    // The parameter b is a lexical variable of the inner.
+    // It is in effect when the inner function is defined
     return function (){
         let c = 10;
         return a + b + c;
