@@ -1,36 +1,74 @@
+---
+marp: true
+theme: default
+header: 'Chapter 9 The DOM Object Model'
+footer: 'Hung-Yi Chen, Dept. of Info. Mgt., CYUT  | 2024'
+class: lead
+paginate: true
+headingDivider: [1, 2, 3]
+---
+
+<style>
+    .columns {
+    display: flex;
+  }
+  .column {
+    flex: 1;
+    padding: 10px;
+  }
+  .column.large{
+    flex: 2;
+  }
+  .small-font {
+    font-size: 0.8em;
+  }
+
+  section > header,
+section > footer {
+  position: absolute;
+  left: auto;
+  right: 90px;
+  height: 20px;
+}
+
+header {
+  top: 30px;
+}
+
+footer {
+  bottom: 30px;
+}
+
+</style>
+
+
 # Chapter 9 The DOM Object Model 
 
-## BOM 
+## Agenda 
 
-Browser Object Model (BOM):
+- Browser Object Model (BOM)
+  - window, history, location, navigator objects
+- Document Object Model (DOM)
+- Selecting page elements
+- Navigating the DOM
 
-- referring to all the objects exposed by the web browser
-- provides the means to interact with the browser.
-
+## Browser Object Model (BOM) 
 
 BOM is a hierarchy of objects that represent the browser window and its components.
+- provides the means to interact with the browser.
+- The top level object in the BOM is the `window` object. 
 
-The top level object in the BOM is the `window` object. 
+![bg right:40% 90%](img/24-08-21-16-50-12.png)
+<!-- Source: https://itwebtutorials.mga.edu/js/chp1/browser-object-model.aspx -->
 
-<figure>
-
-![](img/24-08-21-16-50-12.png)
-
-<figcaption>Browser Object Model <br/> 
-Source: https://itwebtutorials.mga.edu/js/chp1/browser-object-model.aspx
-</figcaption>
-</figure>
+### The hierarchy of the Browser Object Model (BOM) 
 
 
-<figure>
+![bg right:50% 95%](img/24-08-21-16-58-30.png)
 
-![](img/24-08-21-16-58-30.png)
 
-<figcaption>Browser Object Model <br/>
+<!-- Source: https://medium.com/@reettikgoswami97/document-object-model-dom-c19d66abd235 -->
 
-Source: https://medium.com/@reettikgoswami97/document-object-model-dom-c19d66abd235
-
-</figure>
 
 Some of the important second-level objects in the BOM are:
 - History: allowing to manipulate the browser session history
@@ -40,19 +78,27 @@ Some of the important second-level objects in the BOM are:
 
 ## Window Object
 
-The `window` object is the top-level object in the BOM. It represents the browser window or tab.
-
-All global variables and functions declared with `var` becomes properties and methods of the window object, this is not the case with let and const variables.
+The `window` object is the top-level object in the BOM. 
+- It represents the browser window or tab.
 
 The `window` object is the global object and is the **default object** for JavaScript.
 - It represents the window in which the script is running.
+- All global variables and functions declared with `var` becomes properties and methods of the window object. 
+- this is not the case with let and const variables.
 
-That is, if you do not specify an object, the property or method is assumed to be a property or method of the `window` object.
+---
+
+For example, the following two lines of code are equivalent:
 
 ```javascript
 alert('Hello, World!'); // same as window.alert('Hello, World!');
 window.alert('Hello, World!'); // same as alert('Hello, World!');
 ```
+
+That is, if you do not specify an object, the property or method is assumed to be a property or method of the `window` object.
+
+
+### What can the `window` object do for us?
 
 `window` object provide methods to interact with the browser window, including:
 - opening, closing, and resizing the window
@@ -68,8 +114,9 @@ See more about the `window` object at: [Window - Web APIs | MDN](https://develop
 ```html
 <script>
     // show a new window with the URL "https://example.com" 
-    let exampleWin = window.open("https://example.com", "exampleWin", "resizable");
-    // Resize the pop-up window to 500 pixels wide and 500 pixels high and set the window title to "Example Window" and position it to the center of the screen.
+    let exampleWin = window.open("https://example.com", "_default", "resizable");
+    // Resize the pop-up window to 500 pixels wide and 500 pixels high 
+    // and set the window title to "Example Window" and position it to the center of the screen.
     exampleWin.resizeTo(500, 500);
     // the window.screen object contains information about the user's screen
     exampleWin.moveTo((screen.width - 500) / 2, (screen.height - 500) / 2);
@@ -77,6 +124,18 @@ See more about the `window` object at: [Window - Web APIs | MDN](https://develop
 ```
 In the above code:
 - The second argument of the `open()` method is the name of the browsing context the resource is being loaded into.
+
+---
+
+Syntax: `window.open()` method
+```javascript
+open()
+open(url)
+open(url, target)
+open(url, target, windowFeatures)
+```
+
+See: [Window: open() method - Web APIs | MDN](https://developer.mozilla.org/en-US/docs/Web/API/Window/open#target)
 
 ## History Object
 
@@ -102,18 +161,23 @@ history.back(); // the default object is window
   - e.g. location.href: the full URL of the current page.
   - e.g. location.hostname: the domain name of the server.
 
-<figure>
 
-![](img/24-08-22-11-12-15.png)
+### Location Object cheat sheet for properties and methods
 
-<figcaption>Location Object cheat sheet <br/>
+Location object's methods:
+- `assign(url)`: Navigate to the specified URL.
+- `reload()`: Reloads the current page.
+- `replace(url)`: Replaces the current document with a new one.
+  - redirects to the provided URL; the replaced page is not saved in the session history.
+- `toString()`: Returns the full URL of the current page.
 
-Source: https://www.samanthaming.com/tidbits/86-window-location-cheatsheet/
+![bg right:40% 90%](img/24-08-22-11-12-15.png)
 
-</figcaption>
-</figure>
 
-You can find more information at [window.location Cheatsheet | SamanthaMing.com](https://www.samanthaming.com/tidbits/86-window-location-cheatsheet/) or [Location - Web APIs | MDN](https://developer.mozilla.org/en-US/docs/Web/API/Location).
+<!-- Source: https://www.samanthaming.com/tidbits/86-window-location-cheatsheet/ -->
+
+
+<!-- You can find more information at [window.location Cheatsheet | SamanthaMing.com](https://www.samanthaming.com/tidbits/86-window-location-cheatsheet/) or [Location - Web APIs | MDN](https://developer.mozilla.org/en-US/docs/Web/API/Location). -->
 
 ## Navigator Object
 
@@ -132,7 +196,12 @@ Open the browser console and type the following code to display the user agent s
 console.log(navigator.userAgent);
 ```
 
-If you are interesting, go to [Window: navigator property - Web APIs | MDN](https://developer.mozilla.org/en-US/docs/Web/API/Window/navigator) to see how to detect the user's browser. 
+If you are interested, go to [Window: navigator property - Web APIs | MDN](https://developer.mozilla.org/en-US/docs/Web/API/Window/navigator) to see how to detect the user's browser. 
+
+---
+
+Next, we will discuss the Document Object Model (DOM).
+The DOM allows us to interact with the HTML document by using JavaScript.
 
 ## Document Object Model (DOM) 
 
@@ -170,6 +239,7 @@ Consider the following HTML document:
 </body>
 </html>
 ```
+---
 
 The DOM representation of the above HTML document is as follows:
 
@@ -183,14 +253,55 @@ We must get the reference to the elements in the DOM before we can manipulate th
 
 The `document` object provides several `getElement...` methods to select elements in the DOM.
 
-You can get one or more elements by id attribute, name attribute, class name, tag name or CSS selector:
+You can get one or more elements by id attribute, name attribute, class name, tag name or CSS selector.
 
+### The list of methods to select elements in the DOM:
+
+Select (one) by id:
 - `document.getElementById(your_id)`:  Return the found HTML element (Element object) with the specified id.
+
+Select all by name:
 - `document.getElementsByName(“your_name”)`: Return the set of elements that have the specified name attribute in an array-like object (NodeList).
+
+---
+
+Select all by css class name:
 - `document.getElementsByClassName(“your_class_name”)`: Return the set of elements that meet the specified class name in an array-like object (HTMLCollection).
+
+Select all by tag name:
 - `document.getElementsByTagName(“your_tag_name”)`: Return the set of elements that meet the specified tag name in an array-like object (HTMLCollection).
-- `document.querySelector(“your_css_selector”)`: 回傳符合 CSS 選擇器條件的第一個元素. Return the first element (Element object) that meets the specified CSS selector.
+
+---
+
+Select first by CSS selector:
+- `document.querySelector(“your_css_selector”)`: Return the first element (Element object) that meets the specified CSS selector.
+
+Select all by CSS selector:
 - `document.querySelectorAll(“your_css_selector”)`: Return all elements that meet the specified CSS selector in an array-like object (NodeList).
+
+### Lab 09_01: Numbering the h1 elements
+
+Consider the following HTML document. We need to write a script to number the h1 elements from 1 to n in the order they appear in the document.
+
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+    <title> Numbering the h1 elements </title>
+    </head>
+    <body>
+        <h1>Header 1</h1>
+        <h1>Header 2</h1>
+        <h1>Header 3</h1>
+    </body>
+    <script>
+        //TBD
+    </script>
+</html>
+```
+---
+
+
 
 ### Q: Element and Node objects?
 
