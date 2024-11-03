@@ -75,4 +75,3 @@ sportCar.turbo();
 2. JavaScript uses the "Dynamic Dispatch" to determine which method to call. Please explain "Dynamic Dispatch" and how it works in the above code.
 
 
-  

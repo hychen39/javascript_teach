@@ -3,11 +3,11 @@ class Dog {
     #age;
     constructor(name, age) {
         // call setters to set name and age
-        this.name = name;
-        this.age = age;
+        this.#name = name;
+        this.#age = age;
         this.bark = function() {
                 console.log('bark method');
-                console.log(`${this.name} Wang Wang`);
+                console.log(`${this.#name} Wang Wang`);
         };
     }
 
@@ -31,7 +31,7 @@ class Dog {
     }
 }
 
-let dog = new Dog('Wangcai', -1);
+let dog = new Dog('Wangcai', 1);
 console.log(dog.name); // Wangcai
 console.log(dog.age); // 
 dog.bark(); 
