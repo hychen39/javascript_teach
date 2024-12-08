@@ -13,8 +13,8 @@
 <!-- Source: https://javascript.info/bubbling-and-capturing -->
 
 <div id="eventPropagate">
-    <form>FORM
-        <div>DIV
+    <form class="listener">FORM
+        <div >DIV
             <p>P</p>
         </div>
     </form>
@@ -30,7 +30,12 @@
     const allElements = document.querySelectorAll("*");
 
     const elementsWithListeners = Array.from(allElements).filter(elem => {
-        return !elem.classList.contains("noListener");
+        if (elem instanceof HTMLElement && !elem.classList.contains("noListener")) {
+            return true;
+        } else {
+            return false;
+        }
+        
     });
 
     for (let elem of elementsWithListeners) {

@@ -15,27 +15,28 @@
       <script>
         const eventLog = document.getElementById('eventLog');
 
-        // Monitor the document's state
-        document.addEventListener('readystatechange', (e) => {
-            eventLog.value += `>> document' state: ${document.readyState} \n`
-        })
+        // // Monitor the document's state
+        // document.addEventListener('readystatechange', (e) => {
+        //     eventLog.value += `>> document' state: ${document.readyState} \n`
+        // })
 
 
         // monitor the window's load event 
         window.addEventListener('load', (e) => {
             eventLog.value += " window.onload \n";
-            console.log(e);
+            console.log('load timestamp', e.timeStamp);
         });
 
-        // Monitor the document's body onload property
-        // The event is triggered when the document's body is loaded
-        document.body.onload = (e) => {
-            eventLog.value += " body onload property \n";
-        }
+        // // Monitor the document's body onload property
+        // // The event is triggered when the document's body is loaded
+        // document.body.onload = (e) => {
+        //     eventLog.value += " body onload property \n";
+        // }
 
         // Monitor the DOM content state of the document
         document.addEventListener('DOMContentLoaded', (e) => {
             eventLog.value += " DOM Content Loaded \n";
+            console.log('DOMContentLoaded timestamp', e.timeStamp);
         })
 
       </script>

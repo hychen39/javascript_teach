@@ -9,6 +9,12 @@
             padding: 10px;
             border: 1px solid #aaaaaa;
         }
+        .box-dragEnd {
+            background-color: #bab6b6;
+            width: 250px;
+            height: 250px;
+            padding: 10px;
+        }
     </style>
 </head>
 <body>
@@ -47,6 +53,13 @@
         console.log('dragstart: ', event.target.id);
         event.dataTransfer.setData("text/plain", event.target.id);
     };
+    //
+    
+    dogImg.ondragend = function (event) {
+        console.log('dragend');
+        const sourceImg = document.getElementById("sourceImg");
+        sourceImg.classList.add("box-dragEnd");
+    };
 
     function reset() {
         // get the dragged element
@@ -56,6 +69,7 @@
         if (dogImage) {
             dropZone.removeChild(dogImage);
             sourceImg.appendChild(dogImage);
+            sourceImg.classList.remove("box-dragEnd");
         }
     }
 </script>
