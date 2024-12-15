@@ -6,37 +6,27 @@
     <title>Document</title>
 </head>
 <body>
-    <form id="exampleForm" action="https://formtester.goodbytes.be/post.php" method="post"
+    <form id="exampleForm" action="#" method="post"
     target="_blank">
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
+        <input type="text"  name="name">
         <br>
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
+        <input type="email" name="email">
         <br>
         <input type="submit" value="Submit">
     </form>
     <p> Go to https://formtester.goodbytes.be/post.php to see the form submission. </p>
     <script>
-        function validate(formData) {
-            const name = formData.get('name');
-            const email = formData.get('email');
-            if (name === "" || email === "") {
-                alert("Please fill in all fields.");
-                return false;  // return false to prevent the form submission
-            } else 
-            return true;  // return true to allow the form submission
-        }
+        
         
         const form = document.getElementById('exampleForm');
 
         form.addEventListener('submit', function(event) {
+            event.preventDefault();
             const formData = new FormData(form);
-            if (!validate(formData)) {
-                event.preventDefault();  // prevent the form submission
-            } else {
-                form.submit();  // allow the form submission
-                alert("Form submitted successfully.");
+            for (let [key, value] of formData.entries()) {
+                console.log(key, value);
             }
         });
     </script>

@@ -33,8 +33,8 @@
     // check if the key pressed is a number
     function isNumberKey(event) {
         const exceptionKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight'];
-        if (isNaN(event.key) && !exceptionKeys.includes(event.code) === true || event.code =='Space') {
-            // prevent the default behavior of the keydown event, but not stop the event propagation
+        if ((isNaN(event.key) && !exceptionKeys.includes(event.code)) || event.code =='Space') {
+            // prevent the default behavior of the keydown event, and stop the event propagation
             event.preventDefault();
             // stop the event propagation
             event.stopPropagation();
