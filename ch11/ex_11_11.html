@@ -21,10 +21,10 @@
         
         
         const form = document.getElementById('exampleForm');
-
+        var formData;  // for demo purposes. Not a good practice to use global variables.
         form.addEventListener('submit', function(event) {
             event.preventDefault();
-            const formData = new FormData(form);
+            formData = new FormData(form);
             for (let [key, value] of formData.entries()) {
                 console.log(key, value);
             }

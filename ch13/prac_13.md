@@ -2,17 +2,17 @@
 
 ## Practice 1
 
-Your task is to increment a global counter asynchronously and log the results in a sequential manner.
+Your task is to increase a global counter asynchronously and log the results in a sequential manner.
 
 Requirements:
 1. Create a global variable `counter` and set it to 0.
-2. Create a function `incrementCounter` that return a promise.
+2. Create a function `increaseCounter` that return a promise.
    - The function takes `callId` as an argument.
    - use the `setTimeout()` function to delay one second and then resolve the promise.
    - The fulfilled value should be the string `Call ${callId} - Counter: ${counter}` .
-3. create a for-loop that calls `incrementCounter` 5 times.
-   - pass the loop counter as the `callId` argument to `incrementCounter()`.
-   - log the message `ready ${callId}, Counter: ${counter}` before calling `incrementCounter()`.
+3. create a for-loop that calls `increaseCounter` 5 times.
+   - pass the loop counter as the `callId` argument to `increaseCounter()`.
+   - log the message `ready ${callId}, Counter: ${counter}` before calling `increaseCounter()`.
 
 Example output:
 ```
@@ -34,7 +34,7 @@ Create a for-loop to fetch data from the URL:  `"https://jsonplaceholder.typicod
 
 Read the response body as the JSON value. 
 Log the retrieved JSON value in the console.
-You must use the async/await syntax to fetch the data.
+You must use the **async/await** syntax to fetch the data.
 
 Example outputs:
 
@@ -44,6 +44,7 @@ Fetching data from https://jsonplaceholder.typicode.com/posts/2
 Fetching data from https://jsonplaceholder.typicode.com/posts/3
 Fetching data from https://jsonplaceholder.typicode.com/posts/4
 Fetching data from https://jsonplaceholder.typicode.com/posts/5
+
 {
   userId: 1,
   id: 1,
@@ -117,6 +118,9 @@ When the `readAsText()` method completes the file reading, the `load` event is t
 1. Create an HTML file input element and give it a specific id.
 2. Create a `p` element with a specific id to display the file content.
 3. Create a function `readFileAsync(file)` that takes a `File` object as an argument and return a Promise object that resolves with the file content.
+   - In the function, you create a FileReader object to read the file content.
+   - You register a `load` event listener on the FileReader object. When the event is triggered, you resolve the promise with the file content (`fileReader.result`).
+   - You register an `error` event listener on the FileReader object. When the event is triggered, you reject the promise with the error message.
 4. Register a `change` event listener on the file input element. The event listener should call the `readFileAsync` function with the selected file and display the file content in the `div` element.
 
 ![](img/24-08-14-21-18-25.png)

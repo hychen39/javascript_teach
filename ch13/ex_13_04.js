@@ -1,25 +1,18 @@
-const url = "https://jsonplaceholder.typicode.com/posts/1";
+// Use the Promise to rewrite the code in Example 13-3
 
-console.log('Fetching data from', url);
-
-
-fetch(url)
-    .then(response => {  // register a callback to handle the response
-        console.log("First handler for the fetch()'s promise")
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        // response.text() returns a promise that resolves with the response body
-        return response.json();
-    })
-    .then(data => {
-        console.log("Second handler for the response.json()'s promise");
-        // data is the response body
-        console.log("Second handler for the response.json()'s promise");
-        console.log('Data fetched:', data);
-    })
-    .catch(error => {
-        console.error('Error in the first promise:', error);
+function startTimeouts(msg) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log(msg);
+            // resolve with a message
+            resolve();
+        },  1000);
     });
+}
 
-console.log('Please wait for the data to be fetched...');
+// Call the function
+startTimeouts(2)
+    .then(() => startTimeouts('Second timeout'))
+    .then(() => startTimeouts('Third timeout')) // execute and return a promise object
+    .then(() => startTimeouts('Fourth timeout'))
+    .catch(error => console.error('An error occurred:', error));

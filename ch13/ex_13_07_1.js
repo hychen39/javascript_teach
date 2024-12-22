@@ -11,8 +11,8 @@ function longtimeTask(){
             if (result < 10) {
                 reject('The result is less than 50');
             }    
-            resolve(result); // fulfilled
             console.log('== Exit the long task');
+            resolve(result); // fulfilled
         }
         , 2000);
         // Return a random number between 0 and 100
@@ -21,6 +21,9 @@ function longtimeTask(){
 
 // call the longtimeTask function
 console.log('Start the long running task');
-longtimeTask().then(result => console.log('The result is', result))
+
+longtimeTask()
+.then(result => console.log('The result is', result))
 .catch(error => console.error('An error occurred:', error));
+
 console.log('Please wait for the long running task to complete...');    
