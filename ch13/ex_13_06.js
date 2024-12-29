@@ -6,7 +6,8 @@
 function longtimeTask() {
   console.log('== Enter the long task');
   let i = 0;
-  while (i < 10000) {
+  // Note: This loop will block the JS thread for a while because JS Engine is single-threaded.
+  while (i < 1e3) {
     i++;
   }
   console.log('== Exit the long task');
@@ -21,9 +22,6 @@ console.log('Start the long running task');
 // When the promise is created, the long running task is started
 const longtimeTaskPromise = new Promise((resolve, reject) => {
     const result = longtimeTask();
-    if (result < 50) {
-        reject('The result is less than 50');
-    }
     resolve(result); // fulfilled 
 });
 

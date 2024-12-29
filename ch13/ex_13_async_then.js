@@ -12,3 +12,5 @@ let myAsyncFunction = async function(){
 
 myAsyncFunction()
     .then(result => console.log('The result is', result))
+
+console.log('End of script');

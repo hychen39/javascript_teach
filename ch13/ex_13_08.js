@@ -1,7 +1,9 @@
-// ex_13_08.js
-// Incorrect use of await
+
+// ex_13_07.js
+// Rewrite ex_13_06.js by async/await syntax
 
 // A function that returns a promise
+// We don't qualify the function with async keyword because it explicitly returns a promise
 function longtimeTask(){
     return new Promise((resolve, reject) => {
         console.log('== Enter the long async task');
@@ -25,6 +27,8 @@ function longtimeTask(){
 // call the longtimeTask function
 console.log('Start the long running task');
 // Use an Immediate Invoke Function Expression (IIFE) to call the function returning a promise
-let result = await longtimeTask();
-console.log('The result is', result);
+(async () => {
+    let result = await longtimeTask();
+    console.log('The result is: ', result);
+})()
 console.log('Please wait for the long running task to complete...');    
