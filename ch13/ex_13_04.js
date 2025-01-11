@@ -11,8 +11,10 @@ function startTimeouts(msg) {
 }
 
 // Call the function
-startTimeouts(2)
+startTimeouts('First timeout')
     .then(() => startTimeouts('Second timeout'))
     .then(() => startTimeouts('Third timeout')) // execute and return a promise object
     .then(() => startTimeouts('Fourth timeout'))
     .catch(error => console.error('An error occurred:', error));
+
+console.log('Timers are on their way...');
