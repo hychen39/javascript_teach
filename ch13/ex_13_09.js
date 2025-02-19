@@ -1,4 +1,6 @@
-// ex_13_09.js
+// ex_13_08.js
+// Incorrect use of await
+
 // A function that returns a promise
 function longtimeTask(){
     return new Promise((resolve, reject) => {
@@ -9,7 +11,7 @@ function longtimeTask(){
         setTimeout(() => {
             console.log('== Inside the long async task');
             let result = Math.random() * 100;
-            if (result < 50) {
+            if (result < 10) {
                 reject('The result is less than 50');
             }    
             resolve(result); // fulfilled
@@ -20,19 +22,9 @@ function longtimeTask(){
     });
 }
 
-console.log('Start the long running task');
-// Define a named async function 
-async function runLongTimeTask(){
-    try{
-        let result = await longtimeTask();
-        console.log('The result is', result);
-    } catch(error){
-        console.error('An error occurred:', error);
-    }
-}
 // call the longtimeTask function
-runLongTimeTask();
-runLongTimeTask();
-runLongTimeTask();
-runLongTimeTask();
+console.log('Start the long running task');
+// Use an Immediate Invoke Function Expression (IIFE) to call the function returning a promise
+let result = await longtimeTask();
+console.log('The result is', result);
 console.log('Please wait for the long running task to complete...');    
