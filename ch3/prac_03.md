@@ -1,6 +1,6 @@
 # Practices for Chapter 3
 
-## Practice 3-1
+## Practice 3-1: Get the arrays of filenames and extensions
 
 You have a list of names in the following array:
 
@@ -17,7 +17,32 @@ Extensions jpg,png,gif,bmp
 
 Hint: String.prototype.split(), Array.prototype.pop() and Array.prototype.shift() are useful methods to handle the filename and extension.
 
-## Practice 3-2
+## Practice 3-2: Reverse a string
+
+You have a string `Javascript is fun!`. Reverse the string and display it in the console. The expected output in the console is:
+
+```
+!nuf si tpircsavaJ
+```
+
+You can not use the for-loop statement to implement the solution.
+
+## Practice 3-3: Filter out the palindromes
+
+You have a list of words in the following array:
+
+```js
+let words = ['level', 'world', 'radar', 'hello', 'madam'];
+```
+Please iterate through the array and filter the palindromes. The expected output in the console is:
+
+```
+Palindromes: level, radar, madam
+```
+
+
+
+## Practice 3-4: Working with an array of HTMLElement objects
 
 You have a list of items for sale in a page.
 
@@ -80,7 +105,7 @@ Hint:
 - You can iterate through the checkboxes to calculate the total price. Or, you can use `Array.prototype.reduce()` to calculate the total price.
 
 
-## Practice 3-3
+## Practice 3-5: Work with an array of objects
 
 You extend the previous page by adding a detail section showing the details for the clicked item. 
 
