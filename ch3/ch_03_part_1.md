@@ -1,5 +1,5 @@
 ---
-marp: true
+marp: false
 theme: default
 header: 'Chapter 3 Javascript Multiple Values: Arrays and Objects'
 footer: 'Hung-Yi Chen, Dept. of Info. Mgt., CYUT  | 2025'
@@ -47,7 +47,7 @@ footer {
 
 A multiple-value variable is a variable (or the object) that can store more than one value. 
 
-This part discusses arrays, which is a type of multiple-value variable in JavaScript.
+This part discusses arrays, a type of multiple-value variable in JavaScript.
 
 The following topics are covered in this chapter:
 - Arrays and their properties
@@ -98,8 +98,8 @@ let colors = ['red', 'green', 'blue'];  // create an array with three elements
 - Limitation of the Array literal 
   - Be convenient to create an empty array or an array with a list of values.
 - What if we want to create an array dynamically? 
-  - e.g. create an array of length $n$ with all elements are `undefined`.
-- Array constructor `Array(n)` is the right choice in this case.
+  - e.g., create an array of length $n$ with all elements `undefined.`
+- Array constructor `Array(n)` is the right choice.
 
 Example: Create an array of length 5 with empty slots.
 
@@ -135,7 +135,7 @@ The first statement creates an array of length 5 with empty slots, not `[5]`.
 ### Array.of() method: Create an array from a list of values
 
 If you want to avoid the trap of the array constructor, use the `Array.of()` method when creating an array with a list of values.
-- This show your intent clearly.
+- This shows your intent clearly.
 
 ```javascript
 let numbers = Array.of(5);  // create an array with one element 5
@@ -242,7 +242,7 @@ console.log(basicColors[4]);  // undefined
 ### No out-of-bound error
 
 - When you try to query a nonexistent property of any object, you don’t get an error; 
-  - you simply get **undefined**
+  - you get **undefined**
 
 ### Indexes other than non-negative integers
 
@@ -287,7 +287,7 @@ let basicColors = ['red', 'green', 'blue'];
 basicColors[5] = 'yellow';   // auto expand the array to accommodate the new element
 console.log(basicColors);  // ['red', 'green', 'blue', <2 empty items>, 'yellow']
 ```
-Note: there are two empty slots between the last element `green` and the new element `yellow`.
+Note: there are two empty slots between the last element, `green`, and the new element, `yellow.`
 
 ### Non-negative integer index becomes a property
 
@@ -306,7 +306,7 @@ console.log(basicColors);  // ['red', 'green', 'blue', '-1': 'yellow']
 Example: Add an element to the end of the array
 
 To append an element to the end of the array, we:
-- first get the length of the array and 
+- first, get the length of the array, and 
 - then use the length value as the index to add the element.
 
 ```javascript
@@ -317,7 +317,7 @@ console.log(basicColors);  // ['red', 'green', 'blue', 'yellow']
 
 ### Use the `push()` method to append elements
 
-A more concise way to is to use the `push()` method.
+A more concise way to do this is to use the `push()` method.
 - don't need to know the length of the array.
 
 The above code can be rewritten as follows:
@@ -358,10 +358,10 @@ console.log(basicColors);  // ['red', <1 empty item>, 'blue']
 
 The `delete` operator will make the array sparse because it does not alter its length. 
 
-If you want to remove an element, including its slot, use the `splice()` method. 
+If you want to remove an element and its memory space, use the `splice()` method. 
 - avoiding the array becoming sparse.
 
-The `splice()` method is a general method to insert, update, and delete elements in an array.
+The `splice()` method is a general method for inserting, updating, and deleting elements in an array.
 - `splice` means joining or connecting.
 
 
@@ -478,7 +478,7 @@ Using the view of functional programming can lead to a more concise way to itera
 
 Think of the `for/of` loop body block as a function that processes each array element.
 
-So, instead of the body block, we can pass a function that is applied to each visited element in the array. 
+So, instead of the body block, we can pass a function applied to each visited element in the array. 
 
 <div class="columns">
 
@@ -619,7 +619,7 @@ The `splice()` method modifies the original array and returns the removed elemen
 #### Function signature for the `splice()` method
 
 Function signature: `arrayObject.splice(start, deleteCount, item1, item2, ...)`
-- `start`: the index at which to start changing the array (inclusive).
+- `start`: the index to start changing the array (inclusive).
 - `deleteCount`: the number of elements to remove from the array from the `start` index (inclusive).
   - Set it to 0 if you want to insert elements.
 - `item1, item2, ...`: the elements to add to the array.
@@ -707,7 +707,7 @@ array1.concat([7,8,9]);
 
 ### Concatenate arrays: the spread operator `...` (ES6)
 
-Use the spread operator `...` to add elements from an other array in the array literal.
+Use the spread operator `...` to add elements from another array in the array literal.
 
 The spread operator `...` can spread the array of elements into a list of elements. 
 - Convert the array into a list of elements.
@@ -732,11 +732,11 @@ let moreColors = ['yellow', 'purple', ...basicColors];
 console.log(moreColors);  
 ```
 
-The Array's `concat()` method can also be used to achieve the same result.
+The Array's `concat()` method can also achieve the same result.
 
 #### Scenario: Use the spread operator in the function call
 
-- You have an array and want to insert to it with other elements from another array into it. 
+- You have an array and want to insert it with other elements from another array into it. 
 
 Example: Insert the `basicColors` array into the `moreColors` array at index 1.
 
@@ -753,7 +753,7 @@ console.log(moreColors);  // ['yellow', 'red', 'green', 'blue', 'purple']
 
 #### Characteristics of the spread operator `...` 
 
-- Copy: A Copy the elements of the original array when spreading.
+- Copy: A Copy of the elements of the original array when spreading.
 - Shallow copy: Only copy scalar or reference values of the array elements.
   - That means the nested objects are shared between the original and the new array.
 
@@ -781,7 +781,7 @@ let fruits = ['apple', 'banana'];
 let vegetables = ['carrot', 'potato'];
 ```
 
-The new array `food` should be: `['apple', 'banana', 'carrot', 'potato']`, which is an independent copy of the two arrays.
+The new array `food` should be: `['apple', 'banana', 'carrot', 'potato']`, an independent copy of the two arrays.
 
 <details>
 <summary> Referenced Answer </summary>
@@ -801,7 +801,7 @@ console.log(food);  // ['apple', 'banana', 'carrot', 'potato']
 Using the splice():
 
 ```js
-// splice() alters the original array. Watch out the side effect!!
+// splice() alters the original array. Watch out for the side effect!!
 fruits.splice(2, 0, ...vegetables);
 // make a shallow copy of the fruits array
 let food = [...fruits];
@@ -859,16 +859,16 @@ The result is: `[10, 2, 21, 4, 41]`
 
 To control the sort order, you can pass a compare function to the `sort()` method.
 
-The compare function takes two arguments (a and b) and return a value to indicate the order of the two elements:
-- a negative value if a should come before b (i.e a < b, or a-b <0 )
-- a positive value if a should come after b (i.e b < a, or a-b > 0)
+The compare function takes two arguments (`a` and `b`) and return a value to indicate the order of the two elements:
+- a negative value if a should come before b (i.e `a b`, or a-b <0 )
+- a positive value if a should come after b (i.e `b a`, or a-b > 0)
 - Zero or NaN if a and b are equal (i.e a - b = 0)
 
 Order control and test expressions:
 - a, b, c in ascending order: a < b < c
-  - first is less than or equal to second -> `return first(a) - second(b)`
+  - first is less than or equal to second -> `return a - b`
 - a, b, c in descending order: a > b > c
-  - second is less than or equal first -> `return -(first(a) - second(b))`
+  - second is less than or equal first -> `return -(a - b)`
 
 See more about the `sort()` method in the MDN web docs: [Array.prototype.sort() - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) and the `reverse()` method in the MDN web docs: [Array.prototype.reverse() - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse)
 
@@ -913,7 +913,7 @@ console.log(numbers);  // [123, 87, 67, 55, 32]
 
 ### Reverse order： `reverse()`
 
-The `reverse()` method reverses the elements of an array in place and returns reference to the reversed array.
+The `reverse()` method reverses the elements of an array in place and returns a reference to the reversed array.
 - Note: it modifies the original array.
 
 Leave it as the reading assignment. 
