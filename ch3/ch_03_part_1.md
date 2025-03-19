@@ -1,5 +1,5 @@
 ---
-marp: false
+marp: true
 theme: default
 header: 'Chapter 3 Javascript Multiple Values: Arrays and Objects'
 footer: 'Hung-Yi Chen, Dept. of Info. Mgt., CYUT  | 2025'
@@ -571,14 +571,16 @@ Some common methods for operating on arrays include:
 - Remove elements: `pop()`, `shift()`, `splice()`
 - Concatenate arrays: `concat()`
 - Find elements: `indexOf()`, `find()`
-- Sorting: `sort()`, `reverse()`
+- Reverse order: `reverse()`
+- Sorting: `sort()`
 
 ### `push()` and `pop()` methods
 
 Scenario: Insert and remove elements from the end of the array.
 
-- `push(val)`: append an element to the end of the array
+- `push(val1,...valN)`: append one or more elements to the end of the array
   - return the new length of the array.
+  - the array is modified.
 - `pop()`: remove and return the last element from the array
   - return the removed element.
 
@@ -603,16 +605,32 @@ const val = [1,2,3,4,5].shift();  // [2,3,4,5]
 console.log(val);  // 1
 ```
 
+### Quick Practice
+
+
+1. There are three people, Jack, Tom, and Mary, standing in line to buy tickets. Describe this using an array.
+
+2. Jack has finished buying his ticket. Remove him from the queue and print his name. Update the order of the queue.
+
+3. Emily arrives. Add her to the end of the queue.
+
+4. Sophia arrives and is a VIP. Add her to the front of the queue.
+
+5. Print the order of the queue.
+
+
 ### `splice()` method
 
-A general array method to add, remove, and replace elements in an array.
+A general array method to add, remove, and replace elements in an array from an arbitrary position.
 
 What the `splice()` method does on the array:
-1. Remove `deleteCount` elements starting from the `start` index.
-2. Insert the `item1, item2, ...` elements at the `start` index. 
+1. Remove `deleteCount` elements starting from the `start` index when `deleteCount` > 0.
+   
+2. Insert the `item1, item2, ...` elements at the `start` index
    - Original elements after the `start` index are shifted to the right.
-3. Update the element at the `start` index with `deleteCount` = 1
 
+3. Update the element at the `start` index with `deleteCount` = 1 (delete the element and insert a new element).
+   
 The `splice()` method modifies the original array and returns the removed elements as a new array.
 
 
@@ -635,7 +653,7 @@ Return:
 Scenario: Insert multiple elements at the `start` index.
 
 ```javascript
-// Insert Fet after Jan => Insert an element at index 1
+// Insert Feb after Jan => Insert an element at index 1
 let months = ['Jan', 'March', 'April', 'June'];
 months.splice(1,0,'Feb'); 
 console.log(months); // ['Jan', 'Feb', 'March', 'April', 'June']
@@ -781,7 +799,7 @@ let fruits = ['apple', 'banana'];
 let vegetables = ['carrot', 'potato'];
 ```
 
-The new array `food` should be: `['apple', 'banana', 'carrot', 'potato']`, an independent copy of the two arrays.
+The new array `food` should be: `['apple', 'banana', 'carrot', 'potato']`, an **independent** copy of the two arrays.
 
 <details>
 <summary> Referenced Answer </summary>
@@ -802,9 +820,16 @@ Using the splice():
 
 ```js
 // splice() alters the original array. Watch out for the side effect!!
-fruits.splice(2, 0, ...vegetables);
-// make a shallow copy of the fruits array
+fruits.splice(1, 0, ...vegetables);
+// Need to copy the fruits array
 let food = [...fruits];
+```
+
+Using the `push()` method:
+```js
+let food = []
+food.push(...fruits);
+food.push(...vegetables);
 console.log(food);  // ['apple', 'banana', 'carrot', 'potato']
 ```
 
@@ -857,25 +882,29 @@ The result is: `[10, 2, 21, 4, 41]`
 
 #### Control the sort order: define a compare function
 
-To control the sort order, you can pass a compare function to the `sort()` method.
+- To control the sort order, you can pass a compare function to the `sort()` method.
 
-The compare function takes two arguments (`a` and `b`) and return a value to indicate the order of the two elements:
-- a negative value if a should come before b (i.e `a b`, or a-b <0 )
-- a positive value if a should come after b (i.e `b a`, or a-b > 0)
-- Zero or NaN if a and b are equal (i.e a - b = 0)
+- The compare function takes two arguments (`a` and `b`) 
+  - `a` is the first and `b` is the second parameter.
+  - Sort `a` after `b` if the function returns a positive value.
+  - Sort `a` before `b` if the function returns a negative value.
+  - Keep the original order if the function returns 0.
+
+---
 
 Order control and test expressions:
 - a, b, c in ascending order: a < b < c
   - first is less than or equal to second -> `return a - b`
 - a, b, c in descending order: a > b > c
   - second is less than or equal first -> `return -(a - b)`
+  - a - b > 0 ==> Sort `a` after `b`. Add a negative sign to alter the order.
 
 See more about the `sort()` method in the MDN web docs: [Array.prototype.sort() - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) and the `reverse()` method in the MDN web docs: [Array.prototype.reverse() - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse)
 
 #### Ex. Sorting an array of numbers in ascending order.
 
-Ascending order: first is less than or equal to the second.
-- a <= b: return a - b
+Ascending order: a < b < c
+- return a - b
 
 ```javascript
 let numbers = [4, 41, 2, 21, 10];
@@ -885,8 +914,8 @@ console.log(numbers);  // [2, 4, 10, 21, 41]
 
 #### Ex. Sorting an array of numbers in descending order.
 
-Descending order: first is greater than or equal to the second.
-- a >= b is equivalent to: `return -(a-b)` or `return b - a`
+Descending order: a > b > c
+- return -(a - b) or b - a
 
 ```javascript
 let numbers = [4, 41, 2, 21, 10];
@@ -968,6 +997,8 @@ Find elements:
 
 Sorting:
 - `sort()`: sort the elements of the array.
+
+Change the order:
 - `reverse()`: reverse the order of the elements in the array.
 
 

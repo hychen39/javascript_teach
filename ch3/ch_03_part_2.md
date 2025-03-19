@@ -1,8 +1,8 @@
 ---
 marp: false
 theme: default
-header: 'Chapter 3 Javascript Multiple Values: Arrays and Objects'
-footer: 'Hung-Yi Chen, Dept. of Info. Mgt., CYUT  | 2024'
+header: 'Chapter 3 Javascript Multiple Values: Part 2: Objects'
+footer: 'Hung-Yi Chen, Dept. of Info. Mgt., CYUT  | 2025'
 class: lead
 paginate: true
 headingDivider: [1, 2, 3]
@@ -45,7 +45,11 @@ footer {
 
 ## Lesson Objectives
 
-The following topics are covered in this part:
+- Understand the concept of objects in JavaScript.
+- Create an object using the object literal and object constructor.
+- Access and modify object properties.
+- Create an array of objects.
+- Nest objects and arrays.
 
 ## Objects
 
@@ -61,7 +65,7 @@ An object can inherit properties and methods from another object to extend its f
 
 ---
 
-Example 18: The object hierarchy of Animal, Dog, and Cat.
+Example: The object hierarchy of Animal, Dog, and Cat.
 
 - Dogs and Cats inherit the properties and methods from the Animal object.
 
@@ -70,8 +74,7 @@ Example 18: The object hierarchy of Animal, Dog, and Cat.
 
 <div class="small-font">
 
-Fig Source: [Object-Oriented JavaScript Inheritance](https://desalasworks.com/article/object-oriented-javascript-inheritance/)
-
+<!-- Fig Source: [Object-Oriented JavaScript Inheritance](https://desalasworks.com/article/object-oriented-javascript-inheritance/) -->
 
 See more about objects in the MDN web docs: [JavaScript object basics - Learn web development | MDN](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Basics)
 
@@ -87,12 +90,13 @@ There are three ways to create an object in JavaScript:
 
 ### Object literal
 
-Use the object literal `{}` to create an object when you want to create an object declaratively.
+Use the object literal `{}` to create an object declaratively.
 - shortcoming: Can only create one object at a time.
 
-Example 19: Create the car FIAT-500 
+Example: Create the car FIAT-500 
 
 The FIAT 500 in the physical world: 
+- Identify the properties and methods of the FIAT 500.
 
 <img src="img/img03_01.jpg" style="width:30%;" />
 
@@ -143,6 +147,8 @@ In the above object literal:
 ### Object constructor: the template to create multiple objects
 
 Object literal is suitable for creating a single object.
+
+Limitations:
 - Error-prone when creating multiple objects with the same properties and methods.
   - Repeatedly write the same properties and methods for each object.
 
@@ -154,7 +160,7 @@ Use the `class` keyword to define an object constructor in ES6.
 
 ---
 
-Example 20: Define the FIAT500 class in ES6.
+Example: Define the FIAT500 class in ES6.
 
 ```javascript
 class FIAT500 {
@@ -195,6 +201,37 @@ In the above code:
    - All required properties are defined in the constructor function.
 3. Define the methods as named functions in the class definition.
 
+### Quick Practice 
+
+- Create a Cat class with the following properties and methods: 
+  - properties: name, age, color, and breed.
+  - methods: 
+    - meow(): log "Meow!" to the console.
+    - jump(): log "Jumping!" to the console.
+    - info(): log the cat's name, age, color, and breed to the console.
+
+<details>
+<summary>Click to see the answer</summary>
+
+```javascript
+class Cat {
+    constructor(name, age, color, breed) {
+        this.name = name;
+        this.age = age;
+        this.color = color;
+        this.breed = breed;
+    }
+    meow() {
+        console.log('Meow!');
+    }
+    jump() {
+        console.log('Jumping!');
+    }
+    info() {
+        console.log(`Name: ${this.name}, Age: ${this.age}, Color: ${this.color}, Breed: ${this.breed}`);
+    }
+}
+```
 
 
 ### Create an object from the class
@@ -213,11 +250,28 @@ Note:
 - We will cover these methods after discussing the `prototype` concepts in Chapter 7.
 - See more about the class in [Using classes - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_classes)
 
+### Quick Practice
+
+Use the created Cat class to create a cat object named `myCat` with the following properties:
+- name: "Fluffy"
+- age: 3
+- color: "white"
+- breed: "Persian"
+
+<details>
+<summary>Click to see the answer</summary>
+
+```javascript
+let myCat = new Cat('Fluffy', 3, 'white', 'Persian');
+```
+</details>
+
+
 ### Accessing object properties
 
 Use the dot operator `.` or the square brackets `[]`  with the property name (or key name) to access the object's properties.
 
-Example 22: Log the `myFiat` object's mileage property.
+Example: Log the `myFiat` object's mileage property.
 
 ```javascript
 console.log(myFiat.mileage);  // 6000
@@ -225,7 +279,7 @@ console.log(myFiat.mileage);  // 6000
 console.log(myFiat['mileage']);  
 ```
 
-### Add or remove object's properties
+### Add object's properties
 
 JavaScript objects are dynamic.
 - You can add, delete, and update properties (or even methods) of an object after the object is created.
@@ -234,12 +288,13 @@ When you specify a **new key-value pair** that does not exist in the object, Jav
 
 ---
 
-Example 23: Add the `fuel` property to the `myFiat` object.
+Example: Add the `fuel` property to the `myFiat` object.
 
 ```javascript
 myFiat.fuel = 'gasoline';   // Add a new property
 console.log(myFiat.fuel);  // gasoline
 ```
+### Remove a property
 
 To remove a property from an object, use the `delete` operator.
 
@@ -261,7 +316,7 @@ FIAT500 {
 ``` -->
 
 
-## 3.8 Working with objects and arrays
+## Working with objects and arrays
 
 ### Array of objects
 
@@ -309,13 +364,9 @@ let cars = [new FIAT500('Fiat', '500', 1957, 'Blue', 2, 6000),
 </div>
 
 
-
-
-
-
 ### Scenario: Handling an array of HTML element object 
 
-Example 25: Add a click event listener to each radio button in the HTML document below.
+Example: Add a click event listener to each radio button in the HTML document below.
 
 Show the radio button's value when the radio button is clicked. 
 - the value is displayed in the `<p>` element with the `display` id.
@@ -398,7 +449,7 @@ Note to this demo:
 
 You can use an array as a property of an object.
 
-Example 26: Create the `myFiat` object with the `gear` property as an array of values: 1, 2, 3, 4, 5, and R 
+Example: Create the `myFiat` object with the `gear` property as an array of values: 1, 2, 3, 4, 5, and R 
 
 ```javascript
 let myFiat = {
@@ -451,7 +502,7 @@ let myFiat = {
   <div class="column">
     <img src="img/24-Sep-21-11-01-38.png" style="width:100%">
   </div>
-
+</div>
 
 ---
 
@@ -464,11 +515,9 @@ Constructed object:
 
 We have learned: 
 
-- Data types that can store multiple values: Arrays and Objects.
-- Ways to create an array: array literal, array constructor, `Array.of()` method, and `Array.from()` method.
-- Methods to operate on arrays: `push()`, `pop()`, `shift()`, `unshift()`, `splice()`, `concat()`, `find()`, `sort()`, and `reverse()`.
-- Ways to iterate an array: `for/of` loop, `forEach()` method, and `entries()` method.
 - Ways to create an object: object literal and object constructor.
+- Accessing and modifying object properties.
+- `this` keyword to refer to the object itself.
 - Working with arrays and objects: array of objects, object having an array property, and nested objects.
 
 ## References 
