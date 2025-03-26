@@ -1,5 +1,5 @@
 ---
-marp: false
+marp: true
 theme: default
 header: 'Chapter 3 Javascript Multiple Values: Part 2: Objects'
 footer: 'Hung-Yi Chen, Dept. of Info. Mgt., CYUT  | 2025'
@@ -110,11 +110,9 @@ Abstracting the FIAT 500 as an object:
 
 Fig source: [1]
 
---- 
 
-Create the FIAT 500 object in the JavaScript "world".
+### Example: Create the FIAT 500 object by the object literal
 
-The object literal of the FIAT 500:
 ```javascript
 let fiat500 = {
   // properties
@@ -124,7 +122,6 @@ let fiat500 = {
   color: 'Blue',
   passengers: 2,
   mileage: 88000,
-
 // methods
   drive_forward: function(distance_miles) {
     console.log('Driving forward');
@@ -142,7 +139,7 @@ let fiat500 = {
 In the above object literal:
 - The properties are key-value pairs separated by a colon `:`.
 - The methods are key-function pairs separated by a colon `:`.
-- The `this` keyword is used to refer to the object itself to access the object's properties and methods.
+- The `this` keyword refers to the object itself to access the object's properties and methods.
 
 ### Object constructor: the template to create multiple objects
 
@@ -158,9 +155,8 @@ The object constructor is a function that initializes the object's properties.
 
 Use the `class` keyword to define an object constructor in ES6.
 
----
 
-Example: Define the FIAT500 class in ES6.
+### Example: Define the FIAT500 class in ES6.
 
 ```javascript
 class FIAT500 {
@@ -296,7 +292,7 @@ console.log(myFiat.fuel);  // gasoline
 ```
 ### Remove a property
 
-To remove a property from an object, use the `delete` operator.
+Use the' delete' operator to remove a property from an object.
 
 ```javascript
 delete myFiat.fuel;  // remove the fuel property
@@ -370,6 +366,8 @@ Example: Add a click event listener to each radio button in the HTML document be
 
 Show the radio button's value when the radio button is clicked. 
 - the value is displayed in the `<p>` element with the `display` id.
+
+---
 
 <div class="columns">
   <div class="column large">
@@ -517,15 +515,12 @@ We have learned:
 
 - Ways to create an object: object literal and object constructor.
 - Accessing and modifying object properties.
-- `this` keyword to refer to the object itself.
+- `this` keyword refers to the object itself.
 - Working with arrays and objects: array of objects, object having an array property, and nested objects.
 
 ## References 
 
 [1] Eric T. Freeman and Elisabeth Robson, 2014. Head First JavaScript Programming: A Brain-Friendly Guide, O'Reilly Media
-
-
-
 
 
 <script src="../h2_numbering.js">
