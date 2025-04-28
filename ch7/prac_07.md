@@ -8,7 +8,7 @@ The class should have the following properties: first name, last name, and the n
 
 Create three employee objects using the class and add them to an array. 
 
-Add a method to the class's prototype. The method returns the employee's full name and years of service. Do not add the method directly to the class definition.
+Then, add a method to the prototype of the three employee objects. The method returns the employee's full name and years of service. Do not add the method directly to the class definition.
 
 Iterate through the array and print the details of each employee.
 
