@@ -5,7 +5,7 @@ header: 'Chapter 10 Dynamic element manipulation using the DOM'
 footer: 'Hung-Yi Chen, Dept. of Info. Mgt., CYUT  | 2024'
 class: lead
 paginate: true
-headingDivider: [1, 2, 3]
+headingDivider: [1, 2, 3, 4]
 ---
 
 <style>
@@ -49,7 +49,7 @@ Topics in this chapter:
 2. add and change attributes and values to elements
 3. add style to elements
 4. add new elements to the DOM
-5. events and event listeners 
+5. events and event listeners (TBD: Move to part 2)
 
 ## Basic DOM traversing 
 
@@ -65,7 +65,7 @@ Review the section of "Navigating the DOM" in Chapter 9.
 
 ### Example 10-1: Use the element id name as the key to access the element in the HTMLCollection object
 
-When you get the child elements of the body element, how do you get get the element of the id "forest"?
+When you get the child elements of the `<body>` element, how do you get get the element of the id "forest"?
 
 ```html
   <body>
@@ -144,22 +144,28 @@ Please review the section of "Select Page Elements" in Chapter 9.
 
 ## Modify the CSS classes of an element
 
-- `classList` property of an element object
-  - Return a live **DOMTokenList** collection of the class attributes of the element.
-
-- `DOMTokenList` object
+- use the `classList` property to get the `DOMTokenList` object
+  - Return a live collection of the class attributes of the element.
+- use the methods of the `DOMTokenList` object to manipulate the classes of an element.
   - a set of space-separated tokens. 
   - provides methods to **add**, **remove**, **toggle**, and **check** if a token exists in the list.
 
-In short, 
-  - use the `classList` property to get the `DOMTokenList` object
-  - use the methods of the `DOMTokenList` object to manipulate the classes of an element.
   
 ### Add a class
 
-Example 10-2: Modify the CSS classes of an element by JS 
-Consider the following HTML code (See full code in [`ch10/ex_10_02.html`](ex_10_02.html)). 
-We want to apply the `blue` class to the shape element.
+- Use the `add` method of the `DOMTokenList` object to add one or many classes to an element.
+- The `add` method takes one or more class names as arguments and adds them to the element's class list.
+
+```js
+add(token1)
+add(token1, token2)
+add(token1, token2, /* …, */ tokenN)
+```
+
+#### Example 10-2: Modify the CSS classes of an element by JS 
+
+- Consider the following HTML code (See full code in [`ch10/ex_10_02.html`](ex_10_02.html)). 
+- We want to apply the `blue` class to the shape element `<div id="shape">`.
 
 ```html
 <body>
@@ -180,9 +186,9 @@ We want to apply the `blue` class to the shape element.
 ---
 
 Steps:
-1. Get the square element by its id.
-2. Get the `DOMTokenList` object of the square element from the `classList` property.
-3. Add the `blue` class to the square element.
+1. Get the shape element by its id.
+2. Access the shape element's `classList` property to get the `DOMTokenList` object 
+3. Use the `DOMTokenList` object's `add()` to add the `blue` class to the shape element.
 
 ```javascript
 let shape = document.getElementById("shape");
@@ -204,6 +210,7 @@ shape.classList.remove("blue");
 The `toggle` method adds a class to an element if it is not present and removes it if it is present. 
 - return `true` if the class is in the list after the operation, otherwise `false`.
 
+#### Example: Toggle the hide CSS class 
 
 The current `<div id="shape" class="square" ></div>` does not have the class `hide`. 
 
@@ -219,56 +226,55 @@ shape.classList.toggle("hide");
 
 <!-- Recall that `element.classList` expose the class attributes of an element. -->
 
-- The `htmlElement.style` property exposes the style attributes of an element.
+- The HTMLElement's `style` property exposes the style attributes of an element.
   - return a live `CSSStyleDeclaration` object that contains the inline style attributes of the element.
 - Use `htmlElement.style.<attribute_name>` to assess and set the style attributes of an element.
+  - `htmlElement.style.backgroundColor` to set the background color of an element.
+  - `htmlElement.style.color` to set the text color of an element.
 
-Example 
-- `htmlElement.style.backgroundColor` to set the background color of an element.
-- `htmlElement.style.color` to set the text color of an element.
+### Example: Set the inline style: border
 
----
-
-For example, set the border of the `shape` to `1px solid red`:
+For example, set the border of the `shape` element to `1px solid red`:
 
 ```javascript
 shape.style.border = "1px solid red";
 ```
 
-The resultant square will have the inline style attribute `style="border: 1px solid red;"`:
-
 ![w:600px](img/24-08-27-09-43-49.png)
 
 ## Custom data attributes: data-*
 
-Sometime, we need to store data in the a HTML element, such the record's primary key. 
-- When taking actions, these data will be used to identify the record stored in the front-end or back-end.
+Use Case:
+- Store data in the a HTML element, such the record's primary key. 
+  - These data will be sent to the backend or used in the front-end.
 
 Use the `data-*` attributes to store extra information in the HTML elements.
 - `*` is the name of the data attribute.
+- Multiple words can be connected by `-` (dash) mark. (dash-style names)
+- Any ASCII capital letters (A to Z) are converted to lowercase.
 
 ### Example: 10-3: Store the record and user information in the HTML elements
 
-The `record` element contains the `recordId` and `userName` data attributes.
-- `recordId=1234`
-- `userName="John Doe"`
+Set the `record` element contain the `record-id` and `user-name` data attributes.
+- `record-id=1234`
+- `user-name="John Doe"`
 
 ```html
 <!DOCTYPE html>
 <html>
   <body>
-    <div id="record" data-record-id="1234" data-userName="John Doe"></div>
+    <div id="record" data-record-id="1234" data-user-name="John Doe"></div>
   </body>   
 </html>
 ```
 
-Note 
-- the `data-` prefix is removed from the key name in the `dataset` property and 
-- the key name is converted to the **camelCase**.
+The resultant `record.dataset` will return a Map object:
 
----
+```
+{"recordId":"1234","userName":"John Doe"}
+```
 
-![w:800px](img/24-08-27-10-01-04.png)
+- Note the Map key names are different from the names in `data-*` attributes.
 
 
 ### Access and modify the custom data attributes 
@@ -278,17 +284,23 @@ Use the `dataset` property of the element object to get the custom data attribut
 
 The key name is the camelCase of the custom attribute name.
 - `data-record-id` is converted to `recordId` key name.
-- `data-userName` is converted to `userName` key name.
+- `data-user-name` is converted to `userName` key name.
 
 The property value is always a string.
 
----
+### Example: Get the value of `data-record-id` data attribute
 
-Example: Get the value of `data-record-id` data attribute
+Since `element.dataset` is a Map object, you can either use 
+- the dot notation or 
+- the bracket notation 
+to access the value.
 
 ```javascript
 let record = document.getElementById("record");
+// Use the dot notation
 let recordId = record.dataset.recordId;
+// Use the bracket notation
+let recordId = record.dataset["recordId"];
 ```
 
 ### Add a new property to the `dataset` object
@@ -302,8 +314,8 @@ record.dataset.newProperty = "new value";
 ### Check and delete a property in the `dataset` object
 
 Check if a key exists in the `dataset` object
-- Use the `object.hasOwn(element.dataset, key)` method to check
-- Since the `dataset` object is a `DOMStringMap` object  
+- Use the `in` operator: `"keyname" in element.dataset`
+- Use the `hasOwnProperty` method: `element.dataset.hasOwnProperty("keyname")`
 
 Delete a key-value pair from the `dataset` object
 - Use the `delete` operator: `delete element.dataset.keyname`
@@ -313,6 +325,7 @@ To see more details, please refer to [HTMLElement: dataset property - Web APIs |
 
 ## Lab 01: Apply a inline style and add a custom data attribute to an element
 
+
 ```js
 <body>
     <div id="record" data-record-id="1234" data-userName="John Doe">
@@ -320,17 +333,27 @@ To see more details, please refer to [HTMLElement: dataset property - Web APIs |
     </div>
     <script>
       // 1. Change the color of the record element to red.
-      // 2. Add a new data attribute department="Sales" to the record element.
-      // 3. Log the value of the data attribute department to the console.
+      // 2. Log the attribute 'data-userName' to the console.
+      // 3. Add a new data attribute `data-department="Sales"` to the <div id="record">.
+      // 4. Log the value of the data attribute department to the console.
     </script>
   </body>   
 ```
 File: [lab_10_01.html](lab_10_01.html)
 
+- Note to the second data attribute. It uses the camelCase style, not the dash-style name.
+- Be careful with its converted key name in the `DOMStringMap` object.
 
-## Modifying other attributes
+## Modifying tag attributes using xxxAttribute methods
 
-`setAttribute`, `getAttribute`, and `removeAttribute` methods are used to modify the attributes of an element dynamically.
+Element object provides a set of xxxAttribute methods to access and modify the attributes of an element.:
+- `setAttribute`, `getAttribute`, and `removeAttribute` 
+
+Q: Why do we need these methods after we can modify the HTML page through the element's properties?
+
+To anser this question, we need to:
+- clarify the difference between the HTML element attributes and the DOM element properties.
+- know the **bi-directional** and **one-directional** binding between the HTML element attributes and the DOM element properties.
 
 ### HTML element attributes vs DOM element properties
 
@@ -343,19 +366,21 @@ Q: Element's attributes and properties are the same?
 
 ![](img/24-Nov-30-10-51-17.png)
 
----
+### Bi-directional binding between the HTML element attributes and the DOM element properties
 
-Q: Relationship between the HTML tag and the DOM element object?
+- Browser create a DOM Node object for each HTML tag in the document. 
+- Their properties are bi-directionally bound.
+  - Change one will change the other and vice versa.
 
-- Browser create a DOM object for each HTML tag in the document. 
+### Example: The bi-directional binding between the `<img>` tag and the HTMLImageElement object
 
-For example, for the following `img` tag:
+For the following `img` tag:
 
 ```html
 <img id="myImage" src="image.jpg" alt="An image" class="some-class", title="This is an image" />
 ```
 
-The browser will create a [HTMLImageElement object](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement) for the `<img>` element. 
+The bound DOM element object is [HTMLImageElement object](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement)object.
 
 <div class="columns">
 
@@ -375,11 +400,48 @@ The `img` tag attributes are bind to the `HTMLImageElement`'s properties in **bi
 
 <!-- Fig Source: https://livebook.manning.com/book/jquery-in-action-third-edition/chapter-4/20 -->
 
----
+### Single-directional binding
 
-### Manipulating the attributes of an tag
+A few attributes are bound to the properties of the DOM element object in **one-directional** way.
+- attribute -> property
+- Change the attribute will change the property, but not vice versa.
 
-Use the `element.setAttribute()`, `element.getAttribute()`, and `element.removeAttribute` provide us an intuitive way to access and modify the tag's attributes.
+Examples of the one-directional binding:
+- `checked`, `value` attributes of the `<input>` tag.
+- your non-standard attributes (custom data attributes) 
+
+
+### Example: The one-directional binding attributes
+
+Consider the following `input` tag:
+
+```html
+<body>
+    <input id="name" type="text" id="name" value="John Doe" my-attribute="Hello World" />
+  
+    <script>
+        // value attribute is single-directional binding.
+        let input_name = document.getElementById("name");
+        input_name.value = "Jane Smith"; 
+        console.log(input_name.value); // Jane Smith
+        console.log(input_name.getAttribute("value")); // John Doe
+    </script>
+    </body>
+```
+
+The input tag's `value` attribute is different from the input element's `value` property now.
+
+![](img/25-May-11-12-13-16.png)
+
+See the full code in [`ch10/ex_10_04.html`](ex_10_04.html).
+
+### When to use the xxxAttribute methods?
+
+Use when:
+- Modify the HTML tag attributes with the single-directional binding.
+- Modify your non-standard attributes (custom data attributes)
+
+### setAttribute()
 
 The syntax of the `setAttribute` method is:
 
@@ -389,7 +451,7 @@ element.setAttribute(name, value);
 - If the attribute already exists, the value is updated; 
 - otherwise a new attribute is added with the specified name and value.
 
----
+### getAttribute() and removeAttribute()
 
 The syntax of the `getAttribute` method is:
 
@@ -403,7 +465,7 @@ The syntax of the `removeAttribute` method is:
 element.removeAttribute(name);
 ```
 
-### Example 10-4: Modify the attributes of an element using the setAttribute, getAttribute, and removeAttribute methods
+### Example 10-4: Modify the attributes of an element using the setAttribute methods
 
 With the following HTML code, set the `name` and `disabled` attributes of the button element:
 - `name="submit"`
@@ -411,32 +473,22 @@ With the following HTML code, set the `name` and `disabled` attributes of the bu
 
 ```html
 <html>
-    <style>
-    button {
-        height: 30px;
-        width: 100px;
-        margin: 1em;
-    }
-    </style>
     <button>Hello World</button>
 </html>
 ```
-
----
-
-The following code set the `name` and `disabled` attributes of the button element:
 
 ```javascript
 let button = document.querySelector("button"); 
 button.setAttribute("name", "submit");
 button.setAttribute("disabled", "true");
 ```
+---
 
 ![](img/24-08-27-11-01-11.png)
 
 ### Get all attributes of a tag
 
-- use the `element.attributes` property that returns a `NamedNodeMap` object, 
+- Use the `element.attributes` property that returns a `NamedNodeMap` object, 
   - which is an array-like object.
 
 ![](img/24-08-27-11-02-27.png)
@@ -449,6 +501,22 @@ button.setAttribute("disabled", "true");
 2. When you want to add the `font-size: 16px` style to an element, what options do you have?
    <!-- - Use the `style` property of the HTMLElement object.
    - Use the `setAttribute` method to set the `style` attribute of the element. -->
+<details>
+<summary>Answer</summary>
+
+Q1 Ans:
+
+- bi-directional or one-directional binding between the HTML tag and the DOM element object.
+
+Q2 Ans:
+
+- Use the `style` property of the HTMLElement object.
+  - `element.style.fontSize = "16px";`
+
+- Use the `setAttribute` method to set the `style` attribute of the element.
+  - `element.setAttribute("style", "font-size: 16px");`
+ 
+</details>
 
 
 ## Creating new elements and adding them to the DOM
@@ -456,11 +524,12 @@ button.setAttribute("disabled", "true");
 You can create a new element and add it to the DOM to create a new content dynamically.
 - because the DOM elements and HTML document are bound each other.
 
-Scenario:
-- you allow a user to add more than one email addresses to the form. 
+### Scenario: Add a new email input element to the form
+
+- You allow a user to add more than one email addresses to the form. 
 - When the user clicks the "Add Email" button, a new input element will be added to the form.
 
-
+![](img/25-May-11-14-19-01.png)
 
 ### Steps to create a new element and add it to the DOM
 
@@ -491,7 +560,7 @@ Click the "Add another email" button to add a new email input element to the for
 
 ---
 
-The logical steps:
+The logic steps to implement the requirement are:
 1. Get the total number of email input elements in the form so that we can assign a unique id to the new email input element.
 2. Find the parent element where we want to add the new email input element.
 3. Create a new label element and set its `for` attribute to the new email input element's id.
@@ -505,7 +574,9 @@ Step 1. Get the total number of email input elements in the form so that we can 
 ```javascript
 // Use the css selector to get all email input elements
 // Select all input elements with the type of email whose parent is the emailList div element.
+// Return a NodeList object.
 let emailList = document.querySelectorAll("#emailList > input[type=email]");
+// Get the total number of email input elements
 let emailCount = emailList.length;
 ```
 
@@ -589,310 +660,21 @@ Based on the example 10_05, write a script to create a `h1` element with the tex
 
 Method 1:
 - Create a new `h1` element and set its text content to "JavaScript is fun!"
-- Use the `before` method to insert the new `h1` element before the `fieldset` element.
+- Use the `before` method of the `fieldset` element to insert the new `h1` element before the `fieldset` element.
   - Study the `before` of the `Node` object from the [MDN Web Docs]() to help you.
+- Hint: the `element.before()` will find the parent element of the `element` and append the new element to the parent element before the `element`.
+
 
 ---
 
 Alternatively, 
 - Get the first child of the body element (the `fieldset` element) 
-- Then, use the `insertBefore` method of the **parent element** to insert the new element before the `fieldset` element.
+- Find the parent element of the `fieldset` element.
+- Then, use the `insertBefore` method of the **parent element** to insert the new element.
   - Study the `insertBefore` method of the `Node` object from the [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/API/Node/insertBefore) to help you.
 
 
-## Event Model
 
-Events represent that something has happened in the browser.
-
-Events can be:
-- Windows or DOM events (click, mouseover, keydown, drag-and-drop, scroll etc.), indicating the user's interaction with the window or the DOM
-- API events (read client-side file, fetch resources from a server, timer, etc.), notifying developers that asynchronous operations have been completed.
-
-Ref: [Event handling (overview) - Event reference | MDN](https://developer.mozilla.org/en-US/docs/Web/Events/Event_handlers)
-
-### Example 10-6: the button click event (DOM event)
-
-
-<img src="https://dotnettutorials.net/wp-content/uploads/2020/05/word-image-28.png?ezimgfmt=ngcb8/notWebP" alt="button click event" width="800"/>
-
-
-source: https://dotnettutorials.net/wp-content/uploads/2020/05/word-image-28.png?ezimgfmt=ngcb8/notWebP
-
-
-## Event listener
-
-Event listeners are functions that listen for events and execute code when the event occurs.
-- Event listeners are call-back functions.
-
-The function signature of the event listener is:
-
-```javascript
-functionName(event) {
-    // code to execute when the event occurs
-}
-```
-
-## Event Object 
-
-The browser will pass (inject) an `Event` object to the event listener function when the event occurs.
-
-The `Event` object tell us two basic things:
-- the event type
-- the target element that triggers the event (event target)
-
-Depend on the event type, the `Event` object may have more properties. For example, 
-- a [mouse event](https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent) includes the coordinate of the mouse pointer.
-- a [keyboard event](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent) include the key code of the key that is pressed.
-
-To see the full list of the event types, please refer to 
-- [Event reference | MDN](https://developer.mozilla.org/en-US/docs/Web/Events)
-- [Event - Web APIs | MDN](https://developer.mozilla.org/en-US/docs/Web/API/Event)
-
-
-## Register an event listener to an DOM element
-
-There are three ways to register an event listener to an element:
-- Setting the event **handler attribute** of the HTML tag (inline event handler)
-- Setting the event **handler property** of the DOM element
-- Calling the `addEventListener()` method of the DOM element
-
-Let discuss when to use which method.
-
-## Use the inline event handler: Write javascript code in the `onXYZ` attribute of the HTML tag
-
-When you want to execute a simple code when the event occurs, you can use the inline event handler.
-
-You write javascript code in the `onXYZ` attribute of the HTML tag, such as `onclick`, `onmouseover`, `onkeydown`, etc.
-
-### Example 10-7: Inline event handler
-
-```html
-<!DOCTYPE html>
-<html>
-    <head>
-    </head>
-    <body>
-        <a href="#" onclick="alert('Hello, world!');">Click me to say hello.</a> <br/>
-        <a href="#" onclick="sayHello(this);"> Click me to invoke a function.</a> <br/>
-    </body>
-
-    <script>
-        function sayHello(trigger) {
-            // alert('Hello, world!');
-            console.log('Hello, world!');
-            console.log('this: ', trigger);
-            console.log('event type: ', event.type);
-            console.log('event target: ', event.target);
-        }
-    </script>
-</html>
-```
----
-
-The first `<a>` tag will show an alert message "Hello, world!" when the user clicks the link.
-
-The second `<a>` tag will execute the `sayHello` function with two arguments when the user clicks the link.
-
-The first argument is the `this` keyword, which refers to the element running the inline event handler.
-- the `this` is equal to `event.target` in the `sayHello` function.
-
-
-
-### Implicitly converted inline event handler
-
-The browser will implicitly convert the code in the inline event handler to a function and register it to the element's event listener.
-
-The converted event listener function will have the following pattern:
-
-```javascript
-function(event) { 
-  with(document) {
-    with(this.form || {}) { 
-      with(this) {
-        // code in the inline event handler
-      } 
-    }
-}
-```
-
-That means you can access trigging element (`this`), form data, `document`, and `event` objects in the inline event handler.
-
----
-
-So, the inline event handler in the second `<a>` tag is equivalent to the following code:
-
-```js
-function sayHello(trigger) {
-    ...
-}
-document.body.children[2].onclick = function(event){
-  with(document) {
-    with(this.form || {}) { 
-      with(this) {
-        sayHello(this);
-      } 
-    }
-  }
-}
-```
-
-### Disadvantages
-
-Use the inline event handler a lot will make your code hard to maintain and debug, because 
-1. The JS code is mixed with the HTML code.
-2. Cannot centrally assign the event listeners to the elements.
-3. When multiple tags use the same event handler, you need to assign the event handler to each tag one by one, which is very inconvenient. 
-4. Cannot programmatically and dynamically add or remove the event listeners.
-
-Setting the event handler property of the DOM element is a better way to register the event listener.
-
-## Setting the event handler property of the DOM element to register the event listener
-
-Recall that each HTML element has a corresponding DOM object.
-
-The HTML element has a set of event handler attributes. Similarly, the DOM object has a set of event handler properties, such as `onclick`, `onmouseover`, `onkeydown`, etc., all in lowercase.
-
-You can register an event listener to the DOM element by assigning a function to the event handler property.
-
-### Example 10-8: Setting the event handler property of the DOM element
-
-We rewrite the previous example and separate the javascript code from the HTML code.
-
-```html
-<!DOCTYPE html>
-<html>
-    <head>
-    </head>
-    <body>
-        <a href="#">Click me to say hello.</a> <br/>
-        <a href="#">Click me to invoke a function.</a> <br/>
-
-        <script src="ex_10_08.js"></script>
-    </body>
-</html>
-```
-
----
-
-```javascript
-const allAnchors = document.querySelectorAll('a');
-let firstAnchor = document.querySelectorAll('a')[0]
-let secondAnchor = document.querySelectorAll('a')[1]
-
-// Assign the onclick event handler
-
-firstAnchor.onclick = function(event) {
-  console.log('Event type:', event.type);
-  console.log('Event target:', event.target);
-  window.alert('You clicked the first anchor element');
-}
-
-secondAnchor.onclick = function(event) {
-    console.log('Hello, World!');
-    console.log('Event type:', event.type);
-    console.log('Event target:', event.target);
-}
-```
-
-### Example 10-9: Assign the same listener function to multiple elements
-
-```html 
-<html>
-    <head>
-    </head>
-    <body>
-        <div>
-            <input type="checkbox" id="cb1" name="flavor" value="10" data-flavor="vanilla">
-            <label for="cb1">Vanilla</label>
-            <input type="checkbox" id="cb2" name="flavor" value="20" data-flavor="strawberry">
-            <label for="cb2">Strawberry</label>
-        </div>
-        <script>
-            // define the listener function
-            function logValueData(e){
-                console.log(e.target.value);
-                console.log(e.target.dataset.flavor);
-            }
-            // assign the listener function 
-            const checkboxes = document.getElementsByName('flavor');
-            checkboxes.forEach(checkbox => {
-                checkbox.onclick = logValueData;
-            });
-        </script>
-    </body>
-</html>
-```
-
----
-
-Notes:
-- `document.getElementsByName('flavor')` returns a `NodeList` object that contains all the elements with the name `flavor`.
-- The `NodeList` object provides the `forEach` method to iterate through the elements in the list.
-  - However, the `HTMLCollection` object does not.
-
-### Advantages
-
-- The code is separated from the HTML code.
-- You can centrally assign the event listeners to the elements.
-- You can assign the same listener function to multiple elements.
-
-### Limitations
-
-- You cannot assign multiple event listeners to the same event type of the same element.
-  - e.g. you cannot assign two different functions to the `onclick` event of the same element.
-- You cannot specify the advanced event options when assigning the event listener.
-  - Options such as `capture`, `once`, and `passive`.
-  - These advanced options will be covered in the next chapter. 
-
-The `addEventListener` method of the DOM element provides a solution to these limitations.
-
-## Calling the `addEventListener()` method of the DOM element to register the event listener
-
-The third way to register an event listener to an element is to call the element's `addEventListener` method.
-
-The [syntax of the `addEventListener` method](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener) is:
-
-```javascript
-addEventListener(type, listener)
-addEventListener(type, listener, options)
-addEventListener(type, listener, useCapture)
-```
-
-The last two syntaxes will be discussed in the next chapter.
-
-
-### Parameters for the `addEventListener` method:
-
-`type` parameter:
-- the event type, such as `click`, `mouseover`, `keydown`, etc. 
-- No `on` prefix is needed.
-- See the full list of the event types at [Event reference | MDN](https://developer.mozilla.org/en-US/docs/Web/Events)
-
-`listener` parameter:
-- the **event listener function** that will be executed when the event occurs. 
-- Or, an **object** with a `handleEvent` method.
-
-
-### Example 10-10: Using the `addEventListener` method to register the event listener
-
-Rewrite the previous example and use the `addEventListener` method to register two event listeners for each anchor element.
-
-```html
-...
-<script>
-    // define the listener function
-    function logValueData(e){...}
-    function secondListener(e){...}
-    // assign the listener function 
-    const checkboxes = document.getElementsByName('flavor');
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('click', logValueData);
-        checkbox.addEventListener('click', secondListener);
-    });
-</script>
-```
-
-See the full code in [`ch10/ex_10_10.html`](ex_10_10.html).
 
 ## Summary 
 

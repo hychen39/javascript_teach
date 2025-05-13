@@ -6,10 +6,20 @@
         margin: 1em;
     }
     </style>
+    <body>
+    <input id="name" type="text" id="name" value="John Doe" my-attribute="Hello World" />
     <button>Hello World</button>
     <script>
+        // value attribute is single-directional binding.
+        let input_name = document.getElementById("name");
+        input_name.value = "Jane Smith"; 
+        console.log(input_name.value); // Jane Smith
+        console.log(input_name.getAttribute("value")); // John Doe
+
+        // use the setAttribute method to set the value attribute
         const button = document.querySelector("button");
         button.setAttribute('name', 'submit');
         button.setAttribute('disabled', 'true');
     </script>
+    </body>
 </html>

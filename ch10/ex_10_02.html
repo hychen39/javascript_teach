@@ -20,10 +20,13 @@
         document.body.children.shape.classList.remove("blue");
         // Add the class "yellow" 
         document.body.children.shape.classList.add("yellow");
+        document.body.children.shape.classList.remove("yellow");
         // toggle hide to make the shape element invisible
-        document.body.children.shape.classList.toggle("hide");
+        let status = document.body.children.shape.classList.toggle("hide");
+        console.log(status);
         // toggle hide to make the shape element visible
-        document.body.children.shape.classList.toggle("hide");
+        status = document.body.children.shape.classList.toggle("hide");
+        console.log(status);
         // set the inline style of the border
         document.body.children.shape.style.border = "1px solid black";
     </script>

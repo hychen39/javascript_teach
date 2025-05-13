@@ -23,6 +23,10 @@ The expected output is:
 
 ![](img/24-Nov-30-13-51-39.png)
 
+which has the following element structure:
+
+![](img/25-May-13-22-04-33.png)
+
 ## Practice 10.2
 
 Interactive voting system
