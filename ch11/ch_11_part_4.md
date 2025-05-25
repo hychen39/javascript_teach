@@ -44,7 +44,7 @@ footer {
 
 ## onblur/onfocus and onchange events for the `input` element
 
-### The `onblur` and `onfocus` events
+## The `onblur` and `onfocus` events
 
 The `onblur` event is fired when the input element loses focus. 
 
@@ -77,7 +77,7 @@ const form = document.getElementById('myForm');
 
 See full example in [ex_11_6.html](ex_11_06.html)
 
-### The `onchange` event of the `input` element
+## The `onchange` event of the `input` element
 
 The `onchange` event is fired when the value of an input element changes and the element loses focus.
 
@@ -109,15 +109,13 @@ See full example in [ex_11_7.html](ex_11_7.html)
 
 Let you capture the key pressed by the user and perform the necessary operations.
 
-### The `keydown`, `keyup`, and `keypress` events
+## The `keydown`, `keyup`, and `keypress` events
 
-The `keydown` event is fired when a key is pressed down.
+The `keydown` event: a key is pressed down.
 
-The `keyup` event is fired when a key is released.
+The `keyup` event: a key is released.
 
-Both of the two events emit the `KeyboardEvent` object.
-
-The `keypress` event is fired when a key is pressed down and released. 
+Both of the two events emit the `KeyboardEvent` object to the event handler.
 
 ![bg right:40% fit](https://s1.o7planning.com/web-rs/web-image/en/arf-1141686-vi.webp)
 https://o7planning.org/12319/javascript-keyboardevent
@@ -126,9 +124,10 @@ https://o7planning.org/12319/javascript-keyboardevent
 
 
 Warning: 
-- The [`keypress` event](https://developer.mozilla.org/en-US/docs/Web/API/Element/keypress_event) has been deprecated in the latest version of the JavaScript.
+- The [`keypress` event](https://developer.mozilla.org/en-US/docs/Web/API/Element/keypress_event) has been deprecated in the latest version of the JavaScript (deprecated since 2015).
+- Use the `keydown` or `keyup` event instead.
 
-### Get the pressed key or code
+## Get the pressed key (character value) or code (physical key) 
 
 The `KeyboardEvent` object provides:
 - `key` property: returns the **character value** of the key pressed
@@ -139,9 +138,7 @@ The `KeyboardEvent` object provides:
   - e.g. Press b key, returns "KeyB"; Press shift+b key, returns "KeyB"
   - Press left control key, returns "ControlLeft"
 
-### keyboardEvent event and  keyboardEvent.key property
-
-When user presses a key, the browser generates a `KeyboardEvent` object.
+### keyboardEvent.key property
 
 The `key` property of the `KeyboardEvent` object returns the **character value** of the key pressed.
 
@@ -168,7 +165,7 @@ For example:
 - Press b key, returns "KeyB"
 - Press left-shift and b key, returns "ShiftLeft" and "KeyB" (two events are generated)
 
-### Example 10-8: Display the key and code values when a key is pressed
+## Example 10-8: Display the key and code values when a key is pressed
 
 Enter any keys in the input field, the key and code values of the pressed key are displayed on the page.
 
@@ -197,7 +194,7 @@ const input = document.querySelector("input");
 
 See the complete example in [ex_11_8.html](ex_11_8.html)
 
-### Example 10-9: Allow only numbers to be entered in the input field, no spaces, alphabets, or special characters
+## Example 10-9: Allow only numbers to be entered in the input field, no spaces, alphabets, or special characters
 
 - The example allows only numbers to be entered in the input field. 
 - Exceptional keys include Backspace, Delete, ArrowLeft, and ArrowRight for editing. 
@@ -215,7 +212,8 @@ input.addEventListener("keydown", isNumberKey);
  // function to check if the key pressed is a number
 function isNumberKey(event) {
     const exceptionKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight'];
-
+    // if the key pressed is not a number and not a key in the exceptionKeys array, stop the event
+    // or, if the key pressed is a space, stop the event
     if ((isNaN(event.key) && !exceptionKeys.includes(event.code)) || event.code =='Space') {
             // prevent the default behavior of the keydown event, and stop the event propagation
             event.preventDefault();
@@ -236,7 +234,7 @@ If the key is not a number, the `preventDefault()` method is called to prevent t
 
 See the complete example in [ex_11_9.html](ex_11_09.html)
 
-### Notes to the deprecated `keycode` and `charcode` properties
+## Notes to the deprecated `keycode` and `charcode` properties
 
 The `keycode` and `charcode` properties have been deprecated in the latest version of the JavaScript.
 - Do not use them.
@@ -268,7 +266,7 @@ The `keycode` and `charcode` properties have been deprecated in the latest versi
 
 Form submission is a fundamental aspect of web development, allowing users to send data to a server for processing.
 
-### Setup a form
+## Setup a form
 
 To create a form, use the `<form>` element and include various input elements, such as text fields, radio buttons, checkboxes, and submit buttons.
 
@@ -277,7 +275,7 @@ Set:
   - or the redirect URL after the form is submitted.
 - the `method` attribute: the HTTP method used to send the form data, such as `GET` or `POST`.
 
----
+### Example: Create a form with text input and submit button
 
 ```html
 <body>
@@ -295,24 +293,47 @@ Set:
 </body>
 ```
 
-### Listen to the form submission event
+## Listen to the form submission event
 
 - The form submission event is fired when the user submits the form by clicking the submit button: 
   - the input element with the `type="submit"` attribute.
+- You should listen to the `submit` event of the form element.
+
+```js
+const form = document.getElementById("exampleForm");
+    form.addEventListener("submit", function (event) {
+        // handle the form submission
+    });
+
+```
+
+## What to do in the form submission event handler
 
 You can perform:
 - validation, 
+  - e.g. check if the form data is valid or not.
 - data processing, or
+  - e.g. calculate or convert the form data.
 - other operations 
-before the form is submitted in the form submission event handler.
+  - e.g. show a confirmation message, or clear the form fields.
 
-### Get the form data from the form element
 
-Use the `new FormData(formElementObject)` constructor to create a new `FormData` object from the existing form element.  
+## How to get the form data 
 
-The `FormData` object provides methods to retrieve the form data, such as `get()`, `getAll()`, and `entries()`.
-- store a set of key-value pair of the form data.
-- the `name` attribute of the input element is the key, and the `value` attribute is the value.
+There are two ways to get the form data:
+1. Use the HTMLFormElement's `elements` property to get the form elements.
+2. Use the `FormData` object to get the form data.
+
+### Method 1: Use the `FormData` object
+
+- The `FormData` object is a built-in JavaScript object 
+- Use it to convert the form data into a set of key-value pairs implicitly.
+
+In the `submit` event handler, the steps to get the form data are:
+1. Create a new `FormData` object from the from element.
+2. Use the methods of the `FormData` object to retrieve the form data.
+   - eg. `get(name)`, `getAll(name)`, `entries()`, etc.
+
 
 ### Example 11-11: Construct a `FormData` object from the form data
 
@@ -321,8 +342,13 @@ When the user submits the form, the form data is displayed in the console.
 ```javascript
 const form = document.getElementById("exampleForm");
     form.addEventListener("submit", function (event) {
+        // prevent the default action of the form submission
+        // because we want to handle the form data ourselves
         event.preventDefault();
+        // create a new FormData object from the form element
+        // The constructor will also trigger the `formdata` event
         const formData = new FormData(form);
+        // get the form data as a key-value pair
         for (const [key, value] of formData.entries()) {
             console.log(key + ': ' + value);
         }
@@ -332,6 +358,26 @@ const form = document.getElementById("exampleForm");
 ---
 
 ![w:600px](img/24-Dec-15-16-48-32.png)
+
+### Method 2: Use the `HTMLFormElement.elements` property
+
+- The `elements` property of the `HTMLFormElement` object returns a collection of all the form elements in the form.
+- Use the `name` attribute of the tag as the key to get the value of the form element.
+
+```javascript
+const form = document.getElementById("exampleForm");
+form.addEventListener("submit", function (event) {
+  event.preventDefault();
+  // get the form elements using the elements property
+  // `name` is the value of <input name="name">
+  // `email` is the value of <input name="email">
+  const name = form.elements["name"].value;
+  const email = form.elements["email"].value;
+  console.log("Name: " + name);
+  console.log("Email: " + email);
+});
+```
+
 
 ### Example 11-12: Validate the form data before submission
 
@@ -357,7 +403,9 @@ S2. Validate the form data in the form submission event handler.
 ```js
 form.addEventListener('submit', function(event) {
             const form = document.getElementById('exampleForm');
+            // create a new FormData object from the form element
             const formData = new FormData(form);
+            // validate the form data
             if (!validate(formData)) {
                 event.preventDefault();  // prevent the form submission
             } else {
@@ -367,12 +415,6 @@ form.addEventListener('submit', function(event) {
         });
 ```
 
----
-
-Notes to the `form.submit()` method:
-- The JS will create a new `FormData` object from the form data and send the `FormData` object to the server when the form is submitted.
-- If you want to modify the `FormData` object before submission, you can listen to the `formdata` event of the form element.
-- See [HTMLFormElement: formdata event - Web APIs | MDN](https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/formdata_event)
 
 See the complete example in [ex_11_11.html](ex_11_11.html)
 
@@ -383,10 +425,12 @@ See the complete example in [ex_11_11.html](ex_11_11.html)
   B. To create a new form element
   C. To submit the form data to the server
 
-<!-- Ans: A. To store the form data in a key-value pair
-Incorrect options:
-- C. The HTMLFormElement object is used to submit the form data to server. 
--->
+<details>
+<summary>Answer</summary>
+- Ans: A. To store the form data in a key-value pair
+
+</details>
+
 
 
 - What can you do in the form submission event handler? (Select all that apply)
@@ -395,8 +439,38 @@ Incorrect options:
   C. Prevent the form submission
   D. Call fetch() to send the form data to the server
 
-<!-- Ans: A, B, C, D -->
+<details>
+<summary>Answer</summary>
+- Ans: A, B, C, D
+</details>
 
+
+## Summary
+
+
+- **Focus and Change Events:**  
+  - `onfocus` and `onblur` events detect when input elements gain or lose focus.
+  - `onchange` event triggers when the value of an input changes and loses focus.
+
+- **Keyboard Events:**  
+  - Use `keydown` and `keyup` to capture keyboard input.
+  - The `key` property gives the character value; `code` gives the physical key.
+  - The `keypress` event is deprecated.
+
+- **Input Validation:**  
+  - You can restrict input (e.g., allow only numbers) by handling keyboard events and using `preventDefault()`.
+
+- **Form Submission:**  
+  - Listen to the `submit` event on forms to process or validate data before sending.
+  - Use the `FormData` object or the form’s `elements` property to access form data.
+  - Prevent default submission to handle validation or custom processing.
+
+- **Best Practices:**  
+  - Always validate form data before submission.
+  - Use modern event properties and avoid deprecated ones like `keyCode` and `charCode`.
+
+- **Practical Examples:**  
+  - The chapter provides code samples for handling focus, change, keyboard, and submit events, as well as input validation.
 
 
 <script>

@@ -1,6 +1,5 @@
-// ex_13_08.js
-// Incorrect use of await
 
+// Incorrect use of await
 // A function that returns a promise
 function longtimeTask(){
     return new Promise((resolve, reject) => {
