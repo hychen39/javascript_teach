@@ -48,10 +48,10 @@ footer {
 ### Concurrency
 Concurrency is whenever things are happening "at the same time" or in parallel. 
 
-JS is a single-threaded language, and it can only execute one task at a time.
+JS Engine is single-threaded, and it can only execute one task at a time.
 
 The quick switching between tasks can give the illusion of concurrency, even though the single-thread characteristic.
-- e.g. Ask the browser to get the user's geographical location while continue console log messages.
+<!-- - e.g. Ask the browser to get the user's geographical location while continue console log messages. -->
 
 ### Asynchronous Programming in JavaScript
 
@@ -59,6 +59,7 @@ Asynchronous programming is a programming paradigm that allows a program to perf
 - The program can continue to execute other tasks while waiting for the async task to complete.
 
 - The async task is executed in the background by the browser.
+  - The browser is with the multi-threads capability.
 - The JS engine will continue to execute the next task in the main thread.
 
 ### Example 13-1: Get the user's geographical location
@@ -67,8 +68,11 @@ An example of async programming: getting the user's geographical location.
 ```javascript
 console.log('Start');
 // get the user's geographical location
+// off-load the task to the browser.
 navigator.geolocation.getCurrentPosition(
-  position => console.log(position),   // callback function invoked by the Web API
+  // callback function invoked by the Web API
+  position => console.log(position), 
+  // error handling 
   err => console.log(err)
 );
 console.log('Finish');
@@ -84,7 +88,7 @@ Finish
 // the user's geographical location or an error message
 ```
 
-while the `navigator.geolocation.getCurrentPosition` function run in the background, the JS engine continues to execute the next task in the main thread.
+while the `navigator.geolocation.getCurrentPosition` function run in the background (browser), the JS engine continues to execute the next task in the main thread.
 
 ![](img/24-08-06-10-50-50.png)
 
@@ -202,6 +206,7 @@ To avoid the callback hell, we can use Promises or Async/Await (covered later).
 
 Promises are a better way to handle asynchronous tasks than callbacks.
 - avoid from the callback hell.
+- convert the nested functions to a promise chain.
 
 
 ## Promises: How do they work?
@@ -211,7 +216,7 @@ An async function returns a **Promise** object when it completes its task.
 - Then, the Promise object is placed in a special place called the **Microtask Queue** in JS engine. 
 - The **JS Engine** will find a suitable time to execute the callbacks associated with the promise object.
 
-Recall the async function runs in the browser.
+
 
 ## Use the Promise object 
 
@@ -259,36 +264,38 @@ Source: [Promise - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/We
 
 ## Pattern to write an async function using the promise
 
+```js
+function asyncOperation() {
+    return new Promise((resolve, reject) => {
+        // code to execute either in the JS engine or in the browser
+
+        // call resolve(value) to resolve the promise object if the operation is successful
+        // Otherwise, call reject(reason) to reject the promise object
+    });
+}
+```
+
 1. Create a function that returns a new Promise object.
-2. Pass an executor function as the argument to the `Promise` constructor.
-   - the executor function will be called when the the JS engine construct the new Promise object.
+2. Pass an **executor** function as the argument to the `Promise` constructor.
+   - the executor function will be called and invoked when the the JS engine construct the new Promise object.
 
 ---
+<div class="small-font">
 
 3. The executor function has two parameters: `resolve` and `reject`.
    - `resolve` is a function that resolves the promise object.
    - `reject` is a function that rejects the promise object.
 
-```js
-function asyncOperation() {
-    return new Promise((resolve, reject) => {
-        // code to execute the async task
-
-        // call resolve(value) to resolve the promise object
-        // call reject(reason) to reject the promise object
-    });
-}
-```
-
----
 
 4. Call the `resolve(value)` function to resolve the promise object.
-   - The `value` can be another promise object.
+   - The value will be passed to the resolve handler.
+     - The `value` can be another promise object.
    - The promise object will change to the fulfilled state after the `resolve` function is called.
 5. Call the `reject(reason)` function to reject the promise object.
-   - The `reason` is usually an error object.
+   - The `reason` will be passed to the reject handler.
+     - The `reason` is usually an error object.
    - The promise object will change to the rejected state after the `reject` function is called.
-
+</div>
 
 
 ### Example: Create a custom timeout function 
@@ -300,7 +307,7 @@ function startTimeouts(msg) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             console.log(msg);
-            resolve();
+            resolve('Timeout completed');
         },  1000);
     });
 }
@@ -311,37 +318,46 @@ function startTimeouts(msg) {
 - The async function returns a promise object.
 - We need to register a (promise) handle to handle the settled promise (either resolved or rejected).
 
-### Register the resolved and rejected handlers 
+### Register the resolve and reject handlers 
 
-Resolved Handler:
+Resolve Handler:
 - Use the [`then` method](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then) of the Promise object to register the handler for the fulfilled promise.
 
 ```javascript
 promiseObject.then(onFulfilled_callback);
 ```
 
-Rejected Handler:
+Reject Handler:
 - Use the [`catch` method](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch) of the Promise object to register the handler for the rejected promise.
 
 ```javascript
 promiseObject.catch(onRejected_callback);
 ```
 
+---
+
+Or, you can register both handlers using the `then` method:
+
+```javascript
+promiseObject.then(onFulfilled_callback, onRejected_callback);
+```
+
 ### Example 13-4: Register a callback to handle the fulfilled promise
 
 ```javascript
 let fulfilledPromise = startTimeouts(2);
-fulfilledPromise.then(() => startTimeouts('Second timeout'))
+fulfilledPromise.then((msg) => 
+    console.log('The promise is fulfilled with message:', msg);
+);
 ```
 
 Or, combine the two statements:
 
 ```js
-startTimeouts(2).then(() => startTimeouts('Second timeout'))
+startTimeouts(2).then((msg) => 
+    console.log('The promise is fulfilled with message:', msg);
+);
 ```
-
-Note: the `startTimeouts` function is wrapped in a lambda function.
-
 
 ### Example 13-X-3 Rewrite the nested callbacks using the Promise object
 
@@ -367,6 +383,7 @@ startTimeouts(2)
 Use the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) to fetch local or remote resources.
 - e.g. get the data from a URL.
 
+The HTTP request and response are represented by the following objects:
 - The `request` object represents a resource request.
 - The `response` object represents the response to the request.
 - The `headers` object represents the HTTP headers of the request or response.
@@ -471,7 +488,7 @@ Promise objects are **thenable** objects
 ### Patterns to chain Promise objects
 
 Two patterns to chain Promise objects:
-- Pattern A: Separated error handler for each Promise object.
+- Pattern A: A separated error handler for each Promise object.
 - Pattern B: A single error handler for all Promise objects.
 
 
@@ -500,45 +517,61 @@ promiseObject
 - The `catch` method is used to handle the rejected Promise object that is not handled by the `then` method.
   - The last barrier in the chain.
 
-### Example 13-X-1:  Separated error handler for each Promise object
+### Example 13-X-1:  A separated error handler for each Promise object
 
 
 Assume there are three async functions: `firstTask`, `secondTask`, and `thirdTask`. 
 The `secondTask` function returns a rejected Promise object.
 We want to run the three tasks in sequence and handle the errors separately.
 
----
+See [ex_13_x_1.js](ex_13_x_1.js) for the complete example.
 
+---
 
 ```js
 firstTask()
-    .then(result => secondTask(result), 
-        () => {
-            console.log('Error in second task');
-        })  // The anonymous function returns a promise
-    .then(result => thirdTask(result), error => {
-        console.log('Error:', error);
-        // return a resolved promise for the next then
-        return Promise.resolve(error + 1);
-    })
     .then(result => {
-        console.log('All tasks completed, final result:', result);
-    }, error =>{
-        console.log('Error in third task', error);
+        console.log('First task completed with result:', result);
+        return secondTask(result)
+    },
+        error => {
+            console.log(`Handle the error in the first task: ${error}`);
+            // try to handle the error
+            // error handle successfully. Return a new promise to continue the chain
+            return Promise.resolve(error);
+        })  // The anonymous function returns a promise
+    .then(result => {
+        console.log('Second task completed with result:', result);
+        return thirdTask(result)
+    },
+        error => {
+            console.log('Handle the error in the second task', error);
+            //handle the error unsuccessfully
+            return Promise.reject(error); // Uncomment to handle the error and continue
+        })
+    .then(result => {
+        console.log('Third task completed with result:', result);
+    }, error => {
+        console.log('Handle the error in the third task: ', error);
+        // If not handled, will go to .catch()
+        return Promise.reject(error);
     })
     .catch(error => {
         console.error('Final catch:', error);
     });
+
 ```
 
 ---
 
 The output of the above code is:
 ```
-'First task: resolved.'
-'Second task: rejected'
-[ 'Error in second task:', 2 ]
-[ 'The last then, final result:', 3 ]
+'First task running...'
+[ 'First task completed with result:', 1 ]
+'Second task running...'
+[ 'Handle the error in the second task', 2 ]
+[ 'Handle the error in the third task: ', 2 ]
+[ 'Final catch:', 2 ]
 ```
 
 
@@ -579,7 +612,7 @@ firstTask()
     .then(result => secondTask(result))
     .then(result => thirdTask(result))
     .then(result => {
-        console.log('The last then. final result:', result);
+        console.log('Final result:', result);
     })
     .catch( error => {
         console.error('Final catch:', error);
@@ -593,7 +626,7 @@ The output of the above code is:
 [ 'Final catch:', 2 ]
 ```
 
-See example: [promise_chain_pattern_B.js](promise_chain_pattern_B.js)
+See example: [ex_13_x_2.js](ex_13_x_2.js)
 
 
 ## Summary
