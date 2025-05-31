@@ -48,15 +48,20 @@ footer {
 - async and await keywords
 - Event Loop concurrency model in JS runtime environment
 
-## Make a non-async function to an async function using the Promise object
+## Promisify a non-async function
 
 
-Use the `Promise` object to wrap your non-async functions 
+Use the `Promise` constructor to wrap your non-async functions to make them asynchronous.
 
 Steps to create a Promise object:
-1. Create a new Promise object by calling the `Promise` constructor.
-2. Pass a executor function as the argument to the `Promise` constructor, either an arrow function or a named function.
-4. Add your non-async function to the executor function.
+1. Call the `Promise` constructor to create a Promise object.
+   - The `Promise` constructor takes an executor function as an argument. 
+
+---
+
+2. Pass a executor function with two parameters: `resolve` and `reject`.
+   - The `resolve` function is called to resolve the Promise object (change the state to fulfilled).
+   - The `reject` function is called to reject the Promise object (change the state to rejected).
 
 ```javascript
 function executor(resolve, reject) {
@@ -66,15 +71,18 @@ function executor(resolve, reject) {
 }
 ```
 
+3. Add your non-async function to the executor function.
+
 ---
 
 Important: 
 - The executor function still runs in the main thread of the JS engine, not asynchronous code.
 - Only the timer-based tasks, I/O tasks, and the Web API tasks run asynchronously in the browser.
-- `resolve` and `reject` functions are micro async tasks and will be filed in the Micro-task Queue.
+  - the callback functions of these tasks will be added to the Macro-task Queue
+- `resolve` and `reject` handler functions of the Promise object will be added to the Micro-task Queue.
 
    
-### Example 13-6: Make a non-async function do the async task and return a Promise object
+### Example 13-6: Promisify a non-async function
 
 Assume we have a function that take lots of time to complete the task:
 
@@ -97,23 +105,20 @@ function longtimeTask() {
 
 --- 
 
-Execute the `longtimeTask` function in an async way:
-- Run the non-async function in the executor function of the Promise object.
+Promisify the `longtimeTask` function to make it asynchronous.
 
-```js
-console.log('Start the long running task');
-
-// Use the Promise object to run the long running task
-// When the promise is created, the long running task is started
-const longtimeTaskPromise = new Promise((resolve, reject) => {
-    const result = longtimeTask();
+```javascript
+function longtimeTaskPromise() {
+  return new Promise((resolve, reject) => {
+    const result = longtimeTask();  // run in main thread
+    // assume the result is less than 50, reject the promise
     if (result < 50) {
-        reject('The result is less than 50');
+      reject('The result is less than 50');
     }
     // fulfilled task.
-    // file the result to a queue (the Micro-task Queue)
     resolve(result); 
-});
+  });
+}
 ```
 
 ---
@@ -141,6 +146,8 @@ Please wait for the long running task to complete... (main thread)
 The result is 61.054982580283635 (then callback function)
 ```
 
+The resolve or reject handler functions are executed last. 
+
 <!-- readFile() using the Promise object (assignment) -->
 
 You may interest in the following article about Promises:
@@ -148,7 +155,7 @@ You may interest in the following article about Promises:
 
 ## Wrap the non-async function in an async function
 
-You can also wrap your non-async function in an async function that returns a Promise object.
+You can also wrap your non-async function in an function that returns a Promise object.
 
 ```javascript
 function myAsyncFunction() {
@@ -268,10 +275,13 @@ async function caller() {
     // call the async function
     const result = await myAsyncFunction();
     // use the result of the Promise object
+    ....
+    // the return value will be wrapped in a Promise object automatically
+    return result;
 }
 ```
 
-### meme about async and await
+### The meme about async and await
 
 Everyone in the chain becomes the Tinky Winky (the purple Teletubby) when the last one touches him (the async function).
 - The await must be used in the async function.
@@ -291,6 +301,7 @@ console.log('Start the long running task');
     let result = await longtimeTask();
     console.log('The result is: ', result);
 })()
+
 console.log('Please wait for the long running task to complete...');  
 ```
 
@@ -465,6 +476,65 @@ myAsyncFunction().then(value => console.log(value));
 
 See [ex_13_async_then.js](ex_13_async_then.js) for the complete code.
 
+### Review Question 1
+
+Given the following function, use the async/await syntax to call the function and handle the error.
+
+```javascript
+function randomResult() {
+    return new Promise((resolve, reject) => {
+        const result = Math.random() * 100;
+        if (result < 50) {
+            reject('The result is less than 50');
+        } else {
+            resolve(result);
+        }
+    });
+}
+```
+
+<details> 
+<summary>Answer</summary>
+
+```javascript
+(async () => {
+    try {
+        const result = await randomResult();
+        console.log('The result is', result);
+    } catch (error) {
+        console.error('An error occurred:', error);
+    }
+})();
+```
+</details>
+
+### Review Question 2
+
+Given the following function, use the resolve and reject handlers to handle the function result.
+
+```javascript
+async randomResult(){
+    const result = Math.random() * 100;
+    if (result < 50) {
+        throw new Error('The result is less than 50');
+    } else {
+        return result;
+    }
+}
+```
+
+<details>
+<summary>Answer</summary>
+
+```javascript
+randomResult()
+    .then(result => console.log('The result is', result))
+    .catch(error => console.error('An error occurred:', error));
+```
+
+</details>
+
+
 
 ## EVENT LOOP concurrency model in JS runtime environment
 
@@ -533,7 +603,7 @@ Two queues to store the asynchronous tasks to be executed:
 
 Note: The JS Visualizer 9000 cannot accept the async/await syntax. 
 
-## Video and Interactive Tools to help you understand the JS runtime model
+### Video and Interactive Tools to help you understand the JS runtime model
 
 [Lydia Hallie, 2024. JavaScript Visualized - Event Loop, Web APIs, (Micro)task Queue](https://www.youtube.com/watch?v=eiC58R16hb8)
 
@@ -581,6 +651,56 @@ console.log('5');
 12. The final output is `1 5 2 4 3`.
 
 </details>
+
+### Review Question 
+
+Consider the following code with the macro- and micro-tasks:
+
+```javascript
+console.log('A');
+setTimeout(() => {
+  console.log('B');
+  Promise.resolve().then(() => {
+    console.log('C');
+  }
+  console.log('D');
+  );
+}, 0);
+
+Promise.resolve().then(() => {
+  console.log('E');
+});
+
+console.log('F');
+```
+
+What is the output of the above code?
+
+---
+
+<details>
+<summary>Answer</summary>
+
+1. execute `console.log('A')`, output: `A`
+2. execute `setTimeout`, add the callback to the Macro-task Queue.
+   - Macro-task Queue: `()=>{...}`
+3. execute `Promise.resolve().then`, add the callback to the Micro-task Queue.
+   - Micro-task Queue: `()=> {console.log('E')}`
+4. execute `console.log('F')`, output: `F`
+5. The Call Stack is empty, so the Event Loop moves all the tasks in the Micro-task Queue to the Call Stack.
+6. Execute the first task in the Micro-task Queue, output: `E`
+7. No more tasks in the Micro-task Queue, so the Event Loop moves the first task (only the first) in the Macro-task Queue to the Call Stack.
+8. Execute the first task in the Macro-task Queue, output: `B`
+9. Execute the `Promise.resolve().then` callback, add the callback to the Micro-task Queue.
+   - Micro-task Queue: `()=> {console.log('C')}`
+10. Execute `console.log('D')`, output: `D`
+11. The Call Stack is empty, so the Event Loop moves all the tasks in the Micro-task Queue to the Call Stack.
+12. Execute the first task in the Micro-task Queue, output: `C`
+13. The Call Stack is empty, and the Micro-task Queue is empty, so the Event Loop ends.
+14. The final output is `A F E B D C`.
+
+</details>
+
 
 ## Summary
 

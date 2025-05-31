@@ -213,10 +213,9 @@ Promises are a better way to handle asynchronous tasks than callbacks.
 
 An async function returns a **Promise** object when it completes its task.
 - (or the async function resolves the task and return the promise object as the result.)
-- Then, the Promise object is placed in a special place called the **Microtask Queue** in JS engine. 
-- The **JS Engine** will find a suitable time to execute the callbacks associated with the promise object.
-
-
+- Then, the handler functions of the Promise object is placed in a special queue called the **Microtask Queue**.
+- The **JS Engine** will find a suitable time to execute tasks in the Micro-task Queue.
+  
 
 ## Use the Promise object 
 
@@ -291,10 +290,13 @@ function asyncOperation() {
    - The value will be passed to the resolve handler.
      - The `value` can be another promise object.
    - The promise object will change to the fulfilled state after the `resolve` function is called.
+   - Its resolve handler will be placed in the Micro-task Queue.
 5. Call the `reject(reason)` function to reject the promise object.
    - The `reason` will be passed to the reject handler.
      - The `reason` is usually an error object.
    - The promise object will change to the rejected state after the `reject` function is called.
+   - Its reject handler will be placed in the Micro-task Queue.
+  
 </div>
 
 
@@ -311,6 +313,32 @@ function startTimeouts(msg) {
         },  1000);
     });
 }
+```
+
+#### Note: Code in the Promise constructor is executed by the main thread of the JS engine
+
+- The main thread of the JS engine execute immediately the code in the Promise constructor when creating a new Promise object.
+- Only the `resolve` and `reject` handlers are placed in the Micro-task Queue.
+- The statements after the `resolve()` or `reject()` function still can be executed in the main thread.
+
+### Example: the code in the Promise constructor is executed by the main thread of the JS engine
+
+```javascript
+console.log('1') ;
+let promiseObject = new Promise((resolve, reject) => {
+    console.log('2');
+    resolve('3');
+    console.log('4')
+});
+console.log('5');
+```
+
+The output of the above code is:
+```
+1
+2
+4
+5
 ```
 
 ## How to handle the returned promise: the promise handler
@@ -358,6 +386,22 @@ startTimeouts(2).then((msg) =>
     console.log('The promise is fulfilled with message:', msg);
 );
 ```
+
+### Signature of the onFulfilled_callback and onRejected_callback functions 
+
+The `onFulfilled_callback` and `onRejected_callback` functions have the following signature:
+
+```javascript
+function onFulfilled_callback(value) {
+    // code to handle the fulfilled promise
+    // value is the resolved value of the promise
+}
+function onRejected_callback(reason) {
+    // code to handle the rejected promise
+    // reason is the rejected reason of the promise
+}
+```
+
 
 ### Example 13-X-3 Rewrite the nested callbacks using the Promise object
 
@@ -576,7 +620,7 @@ The output of the above code is:
 
 
 
-See example: [promise_chain_pattern_A.js](promise_chain_pattern_A.js)
+See example: [ex_13_x_1.js](ex_13_x_1.js)
 
 
 ### Pattern B: A single error handler for all Promise objects.
